@@ -13,6 +13,8 @@ namespace ClassHome
 
         public string Local {get; set;}
 
+        public string Descricao { get; set;}
+
         ICollection<DisciplinaModel> Disciplinas { get; set; }
 
     }

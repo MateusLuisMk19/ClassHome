@@ -225,7 +225,7 @@ namespace ClassHome.Controllers
             }
             else
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Login");
             }
         }
 

@@ -1,0 +1,149 @@
+@model DInnerViewModel
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+@*    _context.Publicacoes.FirstOrDefault(x => x.DisciplinaId == Model.DisciplinaId);
+ *@
+    DisciplinaModel DisRel = ViewBag.DisciplinaId;
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    
+    var PUB = new Publicacao();
+    var COM = new Comentario();
+    var controllerAtual = ViewContext.RouteData.Values["controller"].ToString();
+    var actionAtual = ViewContext.RouteData.Values["action"].ToString();
+
+    var menuDIn = controllerAtual == "DInner" ? "active" : "";
+    var mDIndex = controllerAtual == "DInner" ? (actionAtual == "Index" ? "" : "active") : "";
+    var mDTrab = actionAtual == "AcessoRestrito" ? "active" : "";
+    var mDAlun = actionAtual == "AcessoRestrito" ? "active" : "";
+
+    @*
+        var bkg = "card col-3 mb-3 m-5 text-light bg-dark";
+
+        TurmaModel TurmaRel = ViewBag.TurmaId;
+*@
+        ViewBag.Subtitulo = DisRel.Nome;
+        
+    
+}
+<ul class="nav nav-tabs justify-content-center link-dark">
+    <li class="nav-item">
+        <a class="nav-link @menuDIn">Principal</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @mDTrab">Trabalhos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @mDAlun">Alunos</a>
+    </li>
+</ul>
+
+<div class="bg-black  w-100 h-25 border-3 p-5 rounded-top" style="border-radius: 3%;">
+    @* <img src="~/imagens/img.jpg" class="img-fluid" alt="Responsive image"> *@
+    <h2 class="pt-3 pb-3">@DisRel.Nome</h2>
+</div>
+
+<partial name="_MensagemPartial"></partial>
+
+
+<div class="container mt-3 ">
+    <div class="row">
+        
+        <div class="col">
+            Column
+        </div>
+        
+        <div class="col-6 row">
+            <div class="">
+                <form action="">
+                    <div class="col">
+                        <input type="hidden" asp-for="@Model.PublicacaoId">
+
+                        <textarea asp-for="@Model.PublicacaoTexto" class="form-control" placeholder="Escrver nova publicação">
+                        </textarea>
+                        <span asp-validation-for="@Model.PublicacaoTexto" class="text-danger"></span>
+
+                        <div class="form-group col-3 visually-hidden">
+                            <label asp-for="@Model.UserId">Publicador Id</label><br>
+                            <input asp-for="@Model.UserId" value="@usuarioLog.Id" class="form-control col-lg-">
+                            <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+                        
+                            <label asp-for="@Model.DisciplinaId">DisciplinaId Id</label><br>
+                            <input asp-for="@Model.DisciplinaId" value="@DisRel.DisciplinaId" class="form-control col-lg-">
+                            <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span><br>
+                        </div>
+                    </div>
+                    <div class="col mt-2 float-end">
+                        <button class="btn btn-outline-dark" style="border-radius: 20%;" type="submit">Enviar</button>
+                    </div>
+                </form>
+            </div>
+            <div class="w-100"></div>
+            <hr class="mt-3">
+            <div class="w-100"></div>
+            <div class="mt-1">
+
+        @*     @if (Model.Count() > 0)
+        {
+            @foreach (var publicacao in Model)
+            { *@
+                <div class="card text-black bg-white">
+                    <div class="card-header pt-3">
+                        <div class="float-start">
+                            <h5 class="text-black">Nome do publicador</h5>
+                        </div>
+                        <div class="float-end ">
+                            <h5 class="text-secondary">data da publicação</h5>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Texto da publicação</p>
+
+                        <div class="container bg-secondary bg-opacity-25 card p-2">
+                            <form action="">
+                                 <div class="row">
+                                    <div class="col-10 m-0">
+                                        <input type="hidden" asp-for="@Model.ComentarioTexto">
+                                        
+                                        <input asp-for="@Model.ComentarioTexto" class="form-control col" placeholder="Escrver o seu comentario">
+                                        <span asp-validation-for="@Model.ComentarioTexto" class="text-danger"></span>
+                                        
+                                        <div class="form-group col-3 visually-hidden">
+                                            <label asp-for="@Model.UserId">Comentador Id</label><br>
+                                            <input asp-for="@Model.UserId" value="@usuarioLog.Id" class="form-control col-lg-">
+                                            <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+                                        </div>
+                                    </div>
+                                    <div class="col m-0">
+                                        <button class="btn btn-outline-secondary float-end" style="border-radius: 20%; font-size: 13px;" type="submit">Enviar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    @*     @if (Model.Count() > 0)
+            {
+                @foreach (var publicacao in Model)
+                { *@
+                        <div class="card mt-1 bg-secondary bg-opacity-25 p-2 pt-3 pb-0">
+                            <h6 class="text-black">Nome de quem comentou</h6>
+                            <p>comentario</p>
+                        </div>
+                @*        }
+                        } *@
+
+                    </div>
+                </div>
+                          
+     @*        }
+        } *@
+
+            </div>
+        </div>
+        
+        <div class="col">
+            Column
+        </div>
+        
+    </div>
+</div>
