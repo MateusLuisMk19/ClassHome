@@ -40,8 +40,15 @@ using ClassHome.ViewModels;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\AFTEBI\Projeto final\ClassHome-Matt\Views\_ViewImports.cshtml"
+using Microsoft.AspNetCore.Identity;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"06c5b7eabb60dbbe087c0c751e5e072c26fbae27", @"/Views/Shared/AcessoRestrito.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"d7f8367e24f3eff6d083efba9defd419e8e7053b", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c8d55413641de2a77cf7feb4c604b1e51e56de2f", @"/Views/_ViewImports.cshtml")]
     public class Views_Shared_AcessoRestrito : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<String>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-action", "Index", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -96,7 +103,7 @@ using ClassHome.ViewModels;
 #line hidden
 #nullable disable
             WriteLiteral("</b>. Clique no botão para voltar à página principal.</h4>\n");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "06c5b7eabb60dbbe087c0c751e5e072c26fbae275206", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "06c5b7eabb60dbbe087c0c751e5e072c26fbae275389", async() => {
                 WriteLiteral("Voltar à Página Principal");
             }
             );

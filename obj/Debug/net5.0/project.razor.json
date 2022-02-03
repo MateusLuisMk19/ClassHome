@@ -1,5 +1,5 @@
 {
-  "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\ClassHome.csproj",
+  "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\ClassHome.csproj",
   "Configuration": {
     "ConfigurationName": "MVC-3.0",
     "LanguageVersion": "5.0",
@@ -15619,63 +15619,108 @@
   "RootNamespace": "ClassHome",
   "Documents": [
     {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\User\\Cadastrar.cshtml",
-      "TargetPath": "Views\\User\\Cadastrar.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\User\\Perfil.cshtml",
-      "TargetPath": "Views\\User\\Perfil.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\_ViewStart.cshtml",
-      "TargetPath": "Views\\_ViewStart.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\User\\Excluir.cshtml",
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\User\\Excluir.cshtml",
       "TargetPath": "Views\\User\\Excluir.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\Shared\\_Layout.cshtml",
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Shared\\_Layout.cshtml",
       "TargetPath": "Views\\Shared\\_Layout.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\Home\\Index.cshtml",
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Home\\Index.cshtml",
       "TargetPath": "Views\\Home\\Index.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\User\\Login.cshtml",
-      "TargetPath": "Views\\User\\Login.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\Shared\\_LoginLogoutLinkPartial.cshtml",
-      "TargetPath": "Views\\Shared\\_LoginLogoutLinkPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\Shared\\AcessoRestrito.cshtml",
-      "TargetPath": "Views\\Shared\\AcessoRestrito.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\Shared\\_MensagemPartial.cshtml",
-      "TargetPath": "Views\\Shared\\_MensagemPartial.cshtml",
-      "FileKind": "mvc"
-    },
-    {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\_ViewImports.cshtml",
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\_ViewImports.cshtml",
       "TargetPath": "Views\\_ViewImports.cshtml",
       "FileKind": "mvc"
     },
     {
-      "FilePath": "c:\\Users\\HP\\Documents\\GitHub\\ClassHome\\Views\\User\\Index.cshtml",
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Disciplina\\Excluir.cshtml",
+      "TargetPath": "Views\\Disciplina\\Excluir.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Shared\\_MensagemPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_MensagemPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\DInner\\Criar.cshtml",
+      "TargetPath": "Views\\DInner\\Criar.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Turma\\Index.cshtml",
+      "TargetPath": "Views\\Turma\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\DInner\\Index.cshtml",
+      "TargetPath": "Views\\DInner\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Turma\\Excluir.cshtml",
+      "TargetPath": "Views\\Turma\\Excluir.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\User\\Cadastrar.cshtml",
+      "TargetPath": "Views\\User\\Cadastrar.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Disciplina\\Criar.cshtml",
+      "TargetPath": "Views\\Disciplina\\Criar.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Turma\\Criar.cshtml",
+      "TargetPath": "Views\\Turma\\Criar.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\_ViewStart.cshtml",
+      "TargetPath": "Views\\_ViewStart.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Disciplina\\Index.cshtml",
+      "TargetPath": "Views\\Disciplina\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\DInner\\Excluir.cshtml",
+      "TargetPath": "Views\\DInner\\Excluir.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Shared\\_LoginLogoutLinkPartial.cshtml",
+      "TargetPath": "Views\\Shared\\_LoginLogoutLinkPartial.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\Shared\\AcessoRestrito.cshtml",
+      "TargetPath": "Views\\Shared\\AcessoRestrito.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\User\\Index.cshtml",
       "TargetPath": "Views\\User\\Index.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\User\\Login.cshtml",
+      "TargetPath": "Views\\User\\Login.cshtml",
+      "FileKind": "mvc"
+    },
+    {
+      "FilePath": "c:\\AFTEBI\\Projeto final\\ClassHome-Matt\\Views\\User\\Perfil.cshtml",
+      "TargetPath": "Views\\User\\Perfil.cshtml",
       "FileKind": "mvc"
     }
   ],

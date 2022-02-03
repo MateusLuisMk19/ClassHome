@@ -372,7 +372,6 @@ C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\scopedcss\bundle\ClassHo
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.TagHelpers.input.cache
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.TagHelpers.output.cache
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.RazorCoreGenerate.cache
-C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Home\Index.cshtml.g.cs
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Shared\AcessoRestrito.cshtml.g.cs
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Shared\_Layout.cshtml.g.cs
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Shared\_LoginLogoutLinkPartial.cshtml.g.cs
@@ -392,3 +391,12 @@ C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.dll
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ref\ClassHome.dll
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.pdb
 C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\ClassHome.genruntimeconfig.cache
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\DInner\Criar.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\DInner\Excluir.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\DInner\Index.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Disciplina\Criar.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Disciplina\Excluir.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Disciplina\Index.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Turma\Criar.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Turma\Excluir.cshtml.g.cs
+C:\AFTEBI\Projeto final\ClassHome-Matt\obj\Debug\net5.0\Razor\Views\Turma\Index.cshtml.g.cs

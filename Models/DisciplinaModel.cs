@@ -10,8 +10,12 @@ namespace ClassHome
         [Key]
         public int DisciplinaId { get; set;}
 
+        [Required]
+        [MaxLength(50)]
+        public string Nome { get; set;}
+        
+        [MaxLength(250)]
         public string Descricao { get; set;}
-
         public int TurmaId { get; set;}
 
         [ForeignKey("TurmaId")]

@@ -40,8 +40,15 @@ using ClassHome.ViewModels;
 #line default
 #line hidden
 #nullable disable
+#nullable restore
+#line 6 "C:\AFTEBI\Projeto final\ClassHome-Matt\Views\_ViewImports.cshtml"
+using Microsoft.AspNetCore.Identity;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"158f50110ceb8e90f66967021a4794838a77d2c7", @"/Views/User/Index.cshtml")]
-    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"d7f8367e24f3eff6d083efba9defd419e8e7053b", @"/Views/_ViewImports.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"c8d55413641de2a77cf7feb4c604b1e51e56de2f", @"/Views/_ViewImports.cshtml")]
     public class Views_User_Index : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<IEnumerable<UserModel>>
     {
         private static readonly global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute __tagHelperAttribute_0 = new global::Microsoft.AspNetCore.Razor.TagHelpers.TagHelperAttribute("asp-action", "Cadastrar", global::Microsoft.AspNetCore.Razor.TagHelpers.HtmlAttributeValueStyle.DoubleQuotes);
@@ -100,7 +107,7 @@ using ClassHome.ViewModels;
 #line hidden
 #nullable disable
             WriteLiteral("            ");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "158f50110ceb8e90f66967021a4794838a77d2c75948", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "158f50110ceb8e90f66967021a4794838a77d2c76131", async() => {
                 WriteLiteral("Novo User");
             }
             );
@@ -125,7 +132,7 @@ using ClassHome.ViewModels;
 #line hidden
 #nullable disable
             WriteLiteral("    </div>\n</header>\n<hr>\n\n");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("partial", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "158f50110ceb8e90f66967021a4794838a77d2c77403", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("partial", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.SelfClosing, "158f50110ceb8e90f66967021a4794838a77d2c77586", async() => {
             }
             );
             __Microsoft_AspNetCore_Mvc_TagHelpers_PartialTagHelper = CreateTagHelper<global::Microsoft.AspNetCore.Mvc.TagHelpers.PartialTagHelper>();
@@ -185,7 +192,7 @@ using ClassHome.ViewModels;
 #line hidden
 #nullable disable
             WriteLiteral("                <tr>\n                    <td>");
-            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "158f50110ceb8e90f66967021a4794838a77d2c79875", async() => {
+            __tagHelperExecutionContext = __tagHelperScopeManager.Begin("a", global::Microsoft.AspNetCore.Razor.TagHelpers.TagMode.StartTagAndEndTag, "158f50110ceb8e90f66967021a4794838a77d2c710058", async() => {
                 WriteLiteral("<b>");
 #nullable restore
 #line 48 "C:\AFTEBI\Projeto final\ClassHome-Matt\Views\User\Index.cshtml"

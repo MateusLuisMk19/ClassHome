@@ -38,20 +38,20 @@ namespace ClassHome.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("PublicacaoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Texto")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("ComentarioId");
 
-                    b.HasIndex("AlunoId");
-
                     b.HasIndex("PublicacaoId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Comentario");
                 });
@@ -63,6 +63,12 @@ namespace ClassHome.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Descricao")
+                        .HasMaxLength(250)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("TurmaId")
@@ -205,9 +211,6 @@ namespace ClassHome.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AlunoId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTime?>("DataPublicacao")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
@@ -219,11 +222,14 @@ namespace ClassHome.Migrations
                     b.Property<string>("Texto")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("PublicacaoId");
 
-                    b.HasIndex("AlunoId");
-
                     b.HasIndex("DisciplinaId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Publicacao");
                 });
@@ -233,6 +239,9 @@ namespace ClassHome.Migrations
                     b.Property<int>("TurmaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Descricao")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Local")
                         .HasColumnType("TEXT");
@@ -384,21 +393,21 @@ namespace ClassHome.Migrations
 
             modelBuilder.Entity("ClassHome.Comentario", b =>
                 {
-                    b.HasOne("ClassHome.AlunoModel", "Aluno")
-                        .WithMany()
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ClassHome.Publicacao", "Publicacao")
                         .WithMany()
                         .HasForeignKey("PublicacaoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Aluno");
+                    b.HasOne("ClassHome.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Publicacao");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("ClassHome.DisciplinaModel", b =>
@@ -463,21 +472,21 @@ namespace ClassHome.Migrations
 
             modelBuilder.Entity("ClassHome.Publicacao", b =>
                 {
-                    b.HasOne("ClassHome.AlunoModel", "Aluno")
-                        .WithMany()
-                        .HasForeignKey("AlunoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("ClassHome.DisciplinaModel", "Disciplina")
                         .WithMany()
                         .HasForeignKey("DisciplinaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Aluno");
+                    b.HasOne("ClassHome.Models.UserModel", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Disciplina");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<int>", b =>

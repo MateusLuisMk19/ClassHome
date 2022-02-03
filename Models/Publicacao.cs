@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using ClassHome.Models;
 
 namespace ClassHome
 {
@@ -15,10 +16,10 @@ namespace ClassHome
 
         public DateTime? DataPublicacao {get;}
 
-        public int AlunoId { get; set;}
+        public int UserId { get; set;}
 
-        [ForeignKey("AlunoId")]
-        public AlunoModel Aluno { get; set; }
+        [ForeignKey("UserId")]
+        public UserModel User { get; set; }
 
         public int DisciplinaId { get; set;}
 
@@ -28,7 +29,5 @@ namespace ClassHome
         ICollection<Comentario> Comentarios { get; set; }
 
 
-    }
-
-    
+    } 
 }

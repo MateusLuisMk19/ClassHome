@@ -1,0 +1,21 @@
+@model DisciplinaModel
+@{
+
+    ViewBag.Subtitulo = "Excluir Disciplina";
+
+    TurmaModel TurmaRel = ViewBag.TurmaId;
+
+}
+
+<h5 class="text-primary pt-3">@ViewBag.Subtitulo</h5>
+<hr>
+
+<span class="text-light"> Deseja excluir a disciplina @Model.Nome?</span>
+
+<form asp-action="Excluir" class="w-25">
+    <input type="hidden" asp-for="@Model.DisciplinaId">
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-success">Não</a>
+        <button class="btn btn-danger" type="submit">Sim</button>
+    </div>
+</form>
