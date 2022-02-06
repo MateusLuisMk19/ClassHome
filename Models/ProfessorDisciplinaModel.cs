@@ -12,7 +12,7 @@ namespace ClassHome
         public int DisciplinaId { get; set; }
 
         [ForeignKey("ProfessorId")]
-        public ProfessorModel Professer {get; set;}
+        public UserModel Professor {get; set;}
 
         [ForeignKey("DisciplinaId")]
         public DisciplinaModel Disciplina {get; set;}

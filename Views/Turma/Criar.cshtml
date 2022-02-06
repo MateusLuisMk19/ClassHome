@@ -1,44 +1,52 @@
-@model TurmaModel
-@inject ClassHomedbContext _context
+@model DisciplinaModel
 @inject UserManager<UserModel> _userManager
+@inject ClassHomedbContext _context
 @{
+    TurmaModel TurmaRel = ViewBag.TurmaId;
+    int idT;
     if (Context.Request.RouteValues.ContainsKey("id"))
-        ViewBag.Subtitulo = "Editar Turma";
+    { 
+        ViewBag.Subtitulo = "Editar Disciplina"; 
+        idT = Model.TurmaId;
+    }
     else
-        ViewBag.Subtitulo = "Criar Turma";
+    { 
+        ViewBag.Subtitulo = "Criar Disciplina"; 
+        idT = TurmaRel.TurmaId;
+    }
 
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
 
-    var PCriador = _context.Useres.FirstOrDefault(p => p.Id == usuarioLog.Id);
 
 }
 
 <h1 class="text-light">@ViewBag.Subtitulo</h1>
 <hr>
 
-<form asp-action="Criar" asp-route-idCriador="@Model.CriadorId" class="row">
-    <input type="hidden" asp-for="@Model.TurmaId">
+<form asp-action="Criar" class="row">
+    <input type="hidden" asp-for="@Model.DisciplinaId">
     <div class="form-group col-sm-8 col-lg-3">
-        <div class="form-group col-3 visually-hidden">
-            <label asp-for="@Model.CriadorId">Nome do Curso</label><br>
-            <input asp-for="@Model.CriadorId" value="@PCriador.Id" class="form-control">
-            <span asp-validation-for="@Model.CriadorId" class="text-danger"></span>
-        </div>
-
-        <label asp-for="@Model.NomeCurso">Nome do Curso</label><br>
-        <input asp-for="@Model.NomeCurso" class="form-control">
-        <span asp-validation-for="@Model.NomeCurso" class="text-danger"></span>
-
-        <label asp-for="@Model.Local">Localização</label><br>
-        <input asp-for="@Model.Local" class="form-control">
-        <span asp-validation-for="@Model.Local" class="text-danger"></span>
+        <label asp-for="@Model.Nome">Nome da Disciplina</label><br>
+        <input asp-for="@Model.Nome" class="form-control">
+        <span asp-validation-for="@Model.Nome" class="text-danger"></span>
 
         <label asp-for="@Model.Descricao">Descrição</label><br>
         <textarea asp-for="@Model.Descricao" class="form-control"></textarea>
         <span asp-validation-for="@Model.Descricao" class="text-danger"></span>
-    </div>
-    <div class="mt-3">
-        <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-        <button class="btn btn-primary" type="submit">Salvar</button>
+
+        <div class="form-group col-3 visually-hidden">
+            <div class="w-100"></div>
+            <label asp-for="@Model.TurmaId">TurmaId</label><br>
+            <input asp-for="@Model.TurmaId" value="@idT" class="form-control col-lg-">
+            <span asp-validation-for="@Model.TurmaId" class="text-danger"></span><br>
+
+            <label asp-for="@Model.CriadorId">Nome do Criador</label><br>
+            <input asp-for="@Model.CriadorId" value="@usuarioLog.Id" class="form-control">
+            <span asp-validation-for="@Model.CriadorId" class="text-danger"></span>
+        </div>
+        <div class="mt-3">
+            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
+            <button class="btn btn-primary" type="submit">Salvar</button>
+        </div>
     </div>
 </form>

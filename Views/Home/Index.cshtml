@@ -1,0 +1,91 @@
+@model IEnumerable<TurmaModel>
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    ViewBag.Subtitulo = "Turmas";
+
+    var bkg = "card col-3 mb-3 m-5 text-light bg-dark";
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    IEnumerable<TurmaUserModel> UIT = ViewBag.ProffInTurma;
+}
+
+<div class="row mt-5">
+    <div class="col-11">
+        <h1 class="text-primary">@ViewBag.Subtitulo</h1>
+    </div>
+    @if (User.IsInRole("Professor"))
+    {
+        <div class="col m-2 mt-4">
+            <a asp-action="Criar" class="w-50 h-50" title="Criar Turma">
+                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
+                viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                    <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                </svg>
+            </a>
+        </div>
+    }
+</div>
+
+<partial name="_MensagemPartial"></partial>
+
+<div class="container">
+    <div class="row">
+
+        @if (Model.Count() > 0)
+        {
+            @foreach (var rel in UIT)
+            {
+                @foreach (var turma in Model)
+                {
+                    @if (turma.TurmaId == rel.TurmaId)
+                    {
+                        @if (rel.UserId == usuarioLog.Id)
+                        {
+                            <div class="@bkg">
+                                <div class="card-header pt-3">
+                                    <div class="float-start" title="Localização">@turma.Local</div>
+                                    <div class="float-end ">
+
+                                        @if (User.IsInRole("Professor"))
+                                        {
+                                            @if (turma.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="AddProff" asp-route-id="@turma.TurmaId" class="editar link-success"
+                        title="Adicionar professor à turma">
+                                                    <i class="bi bi-person-plus-fill bg-opacity-30 bg-secondary p-1 rounded-circle"></i>
+                                                </a>
+                                            }
+                                            
+                                            <a asp-action="Criar" asp-route-id="@turma.TurmaId"
+                        class="editar link-dark bg-opacity-30 bg-secondary p-1 rounded-circle" title="Editar Turma">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            @if (turma.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="Excluir" asp-route-id="@turma.TurmaId"
+                        class="apagar link-danger bg-opacity-30 bg-secondary p-1 rounded-circle" title="Excluir Turma">
+                                                    <i class="bi bi-trash" style="margin-right: 0;"></i>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    <a asp-controller="Turma" asp-route-id="@turma.TurmaId" asp-action="Index"
+                    class="text-decoration-none nomeDT" title="Nome do Curso">
+                                        <h4 class="card-title text-light">@turma.NomeCurso</h4>
+                                    </a>
+                                    <p class="card-text" title="Descrição">@turma.Descricao</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+</div>

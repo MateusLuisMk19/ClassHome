@@ -76,7 +76,7 @@ namespace ClassHome
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Turma}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
             Inicializador.InicializarIdentity(userManager, roleManager, _context);
         }

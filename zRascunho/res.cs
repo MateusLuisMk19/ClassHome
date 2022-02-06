@@ -100,7 +100,7 @@
                     </div>
                     
                     <div class="card-body">
-                        <a asp-controller="Disciplina" asp-route-id="@turma.TurmaId" asp-action="Index"
+                        <a asp-controller="Turma" asp-route-id="@turma.TurmaId" asp-action="Index"
                     class="text-decoration-none nomeDT" title="Nome do Curso">
                             <h4 class="card-title text-light">@turma.NomeCurso</h4>
                         </a>
