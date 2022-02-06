@@ -16,17 +16,17 @@ namespace ClassHome.Models
                 roleManager.CreateAsync(perfil1).Wait();
             }
 
-            if (!roleManager.RoleExistsAsync("professor").Result)
+            if (!roleManager.RoleExistsAsync("Professor").Result)
             {
                 var perfil2 = new IdentityRole<int>();
-                perfil2.Name = "professor";
+                perfil2.Name = "Professor";
                 roleManager.CreateAsync(perfil2).Wait();
             }
 
-            if (!roleManager.RoleExistsAsync("aluno").Result)
+            if (!roleManager.RoleExistsAsync("Aluno").Result)
             {
                 var perfil3 = new IdentityRole<int>();
-                perfil3.Name = "aluno";
+                perfil3.Name = "Aluno";
                 roleManager.CreateAsync(perfil3).Wait();
             }
         }

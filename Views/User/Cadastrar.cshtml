@@ -15,14 +15,17 @@
 <div class="container col-5 p-5 shadow" style="border-radius: 7%;">
     <form asp-action="Cadastrar" class="row">
         <input type="hidden" asp-for="@Model.Id">
-        <div class="form-group">
-            <label asp-for="@Model.TUsers"></label><br>
-            <select asp-for="@Model.TUsers" class="form-control" 
-            asp-items="@ViewBag.TipoUser">
-                <option disabled selected>Escolha o tipo de utilizador</option>
-            </select>
-            <span asp-validation-for="@Model.TUsers" class="text-danger"></span>
-        </div>
+        @if (!editando)
+        {
+            <div class="form-group">
+                <label asp-for="@Model.TUsers"></label><br>
+                <select asp-for="@Model.TUsers" class="form-control" 
+                asp-items="@ViewBag.TipoUser">
+                    <option disabled selected>Escolha o tipo de utilizador</option>
+                </select>
+                <span asp-validation-for="@Model.TUsers" class="text-danger"></span>
+            </div>
+        }
         <div class="form-group">
             <label asp-for="@Model.NomeCompleto"></label><br>
             <input asp-for="@Model.NomeCompleto" class="form-control" autofocus autocomplete="off">

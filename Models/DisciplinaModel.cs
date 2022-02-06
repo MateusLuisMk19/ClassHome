@@ -20,6 +20,13 @@ namespace ClassHome
 
         [ForeignKey("TurmaId")]
         public TurmaModel Turma { get; set;}
+
+        
+        public int CriadorId { get; set;}
+
+        [ForeignKey("CriadorId")]
+        public ProfessorModel Criador { get; set;}
+        
         ICollection<MatriculaModel> Matricula { get; set; }
         ICollection<ProfessorDisciplinaModel> ProfessorDisciplina { get; set; }
         ICollection<Publicacao> Publicacoes { get; set; }

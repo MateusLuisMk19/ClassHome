@@ -2,38 +2,34 @@ namespace ClassHome.Extensions
 {
     public static class StringExtensions
     {
+        private const string V = "\n";
+        private const string W = "\r";
+
         public static string PrimeiraPalavra(this string texto)
         {
             return texto.Substring(0, texto.IndexOf(" "));
         }
 
-        public static string ResumoName(this string texto)
+        public static int NRows(this string texto)
         {
-            var count = 0;
-            var i = 0;
-            var text = "";
-            if (texto.Length > 25)
+            var num = 1;
+            var cont = 0;
+
+            for (int i = 0; i < texto.Length; i++)
             {
-                for (i = 0; i < texto.Length; i++)
+                var c = texto.Substring(i, 1);
+                if (c == V || c == W)
                 {
-                    var c = texto.Substring(i, 1);
-                    if (c == " ")
+                    cont++;
+                    if (cont == 2)
                     {
-                        count++;
+                        num++;
+                        cont = 0;
                     }
-                    if (count == 4)
-                    {
-                        text = texto.Substring(0,i);
-                        break;
-                    }    
+
                 }
             }
-            else
-            {
-                text = texto;
-
-            }
-            return text;
+            return num;
         }
     }
 }

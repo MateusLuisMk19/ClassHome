@@ -3,14 +3,16 @@ using System;
 using ClassHome.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClassHome.Migrations
 {
     [DbContext(typeof(ClassHomedbContext))]
-    partial class ClassHomedbContextModelSnapshot : ModelSnapshot
+    [Migration("20220205095045_v1")]
+    partial class v1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +165,6 @@ namespace ClassHome.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("TUsers")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("TwoFactorEnabled")

@@ -3,14 +3,16 @@ using System;
 using ClassHome.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ClassHome.Migrations
 {
     [DbContext(typeof(ClassHomedbContext))]
-    partial class ClassHomedbContextModelSnapshot : ModelSnapshot
+    [Migration("20220205094214_v")]
+    partial class v
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,9 +167,6 @@ namespace ClassHome.Migrations
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TUsers")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
@@ -268,21 +267,6 @@ namespace ClassHome.Migrations
                     b.HasKey("TurmaId");
 
                     b.ToTable("Turma");
-                });
-
-            modelBuilder.Entity("ClassHome.TurmaUserModel", b =>
-                {
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("TurmaId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("UserId", "TurmaId");
-
-                    b.HasIndex("TurmaId");
-
-                    b.ToTable("TurmaUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -524,25 +508,6 @@ namespace ClassHome.Migrations
                         .IsRequired();
 
                     b.Navigation("Disciplina");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ClassHome.TurmaUserModel", b =>
-                {
-                    b.HasOne("ClassHome.TurmaModel", "Turma")
-                        .WithMany()
-                        .HasForeignKey("TurmaId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClassHome.Models.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Turma");
 
                     b.Navigation("User");
                 });

@@ -1,4 +1,5 @@
 
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using ClassHome.Models;
@@ -12,6 +13,7 @@ public class Comentario
 
         public string Texto { get; set;}
 
+        public DateTime DataComentario {get;}
         public int UserId { get; set;}
 
         [ForeignKey("UserId")]

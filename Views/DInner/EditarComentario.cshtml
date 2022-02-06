@@ -1,0 +1,43 @@
+@model DInnerViewModel
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    DisciplinaModel DisRel = ViewBag.DisciplinaId;
+    IEnumerable<Publicacao> PUB = ViewBag.Publicacoes;
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+
+}
+
+<h1 class="text-light">@ViewBag.Subtitulo</h1>
+<hr>
+
+<form asp-action="Publicar" asp-route-id="@Model.ComentarioId" asp-route-type="2">
+    <div class="row">
+        <input type="hidden" asp-for="@Model.ComentarioId">
+
+        <div class="form-group col-3 visually-hidden">
+            <label asp-for="@Model.UserId">Comentador Id</label><br>
+            <input asp-for="@Model.UserId" value="@usuarioLog.Id" class="form-control col-lg-">
+            <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+
+            <label asp-for="@Model.PublicacaoId">Comentador Id</label><br>
+            <input asp-for="@Model.PublicacaoId" class="form-control col-lg-">
+            <span asp-validation-for="@Model.PublicacaoId" class="text-danger"></span><br>
+
+            <label asp-for="@Model.DisciplinaId">DisciplinaId Id</label><br>
+            <input asp-for="@Model.DisciplinaId" value="@DisRel.DisciplinaId" class="form-control col-lg-">
+            <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span><br>
+        </div>
+
+        <textarea asp-for="@Model.ComentarioTexto" class="form-control border col m-0"
+            placeholder="Escrver o seu comentario"></textarea>
+        <span asp-validation-for="@Model.ComentarioTexto" class="text-danger"></span>
+
+        <div class="col mt-2 float-end">
+            <a class="btn btn-outline-white" asp-action="Index" asp-route-id="@DisRel.DisciplinaId"
+                style="border-radius: 20%;">Voltar</a>
+            <button class="float-end m-0 border-1" type="submit">Enviar</button>
+        </div>
+    </div>
+</form>

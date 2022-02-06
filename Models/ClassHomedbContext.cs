@@ -13,7 +13,8 @@ namespace ClassHome.Models
         public DbSet<DisciplinaModel> Disciplinas { get; set; }
         public DbSet<ProfessorModel> Professores { get; set; }
         public DbSet<AlunoModel> Alunos { get; set; }
-        public DbSet<ProfessorDisciplinaModel> ProfessorDisciplina { get; set; }
+        public DbSet<ProfessorDisciplinaModel> ProfessorDisciplina { get; set; } 
+        public DbSet<TurmaUserModel> TurmaUser { get; set; } 
         public DbSet<MatriculaModel> Matriculas { get; set; }
         public DbSet<Publicacao> Publicacoes { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
@@ -32,16 +33,22 @@ namespace ClassHome.Models
             modelBuilder.Entity<DisciplinaModel>().ToTable("Disciplina");
             modelBuilder.Entity<ProfessorModel>().ToTable("Professor");
             modelBuilder.Entity<AlunoModel>().ToTable("Aluno");
-            modelBuilder.Entity<ProfessorDisciplinaModel>().ToTable("ProfessorDisciplina");
+            modelBuilder.Entity<ProfessorDisciplinaModel>().ToTable("ProfessorDisciplina"); 
+            modelBuilder.Entity<TurmaUserModel>().ToTable("TurmaUser"); 
 
             modelBuilder.Entity<Publicacao>().ToTable("Publicacao");
             modelBuilder.Entity<Publicacao>().Property(e => e.DataPublicacao).HasDefaultValueSql("datetime('now')")
             .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             modelBuilder.Entity<Comentario>().ToTable("Comentario");
+            modelBuilder.Entity<Comentario>().Property(c => c.DataComentario).HasDefaultValueSql("datetime('now')")
+            .Metadata.SetAfterSaveBehavior(PropertySaveBehavior.Ignore);
 
             modelBuilder.Entity<ProfessorDisciplinaModel>()
                 .HasKey(p => new { p.ProfessorId , p.DisciplinaId });
+ 
+            modelBuilder.Entity<TurmaUserModel>()
+                .HasKey(t => new { t.UserId , t.TurmaId }); 
         }
     }
 }

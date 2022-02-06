@@ -14,7 +14,7 @@ namespace ClassHome
 
         public string Texto { get; set;}
 
-        public DateTime? DataPublicacao {get;}
+        public DateTime DataPublicacao {get;}
 
         public int UserId { get; set;}
 

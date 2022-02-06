@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ClassHome
 {
@@ -15,7 +16,10 @@ namespace ClassHome
 
         public string Descricao { get; set;}
 
+        public int CriadorId { get; set;}
         ICollection<DisciplinaModel> Disciplinas { get; set; }
+        ICollection<TurmaUserModel> Professores { get; set; } 
+
 
     }
 }

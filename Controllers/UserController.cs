@@ -35,7 +35,7 @@ namespace ClassHome.Controllers
         {
             var roles = _context.Roles.OrderBy(r => r.Name).Where(r => r.Name != "administrador").ToList();
 
-                var rolesSelectList = new SelectList(roles);
+            var rolesSelectList = new SelectList(roles);
 
 
             ViewBag.TipoUser = rolesSelectList;
@@ -140,7 +140,7 @@ namespace ClassHome.Controllers
                     {
                         var role = userBD.TUsers;
 
-                        if(role == "aluno")
+                        if(role == "Aluno")
                         {
                             var aluno = new AlunoModel(){
                                 UserId = userBD.Id,
@@ -150,7 +150,7 @@ namespace ClassHome.Controllers
                             _context.SaveChanges();
                             var res = await _userManager.UpdateAsync(userBD);
                         }
-                        else if(role == "professor")
+                        else if(role == "Professor")
                         {
                             var professor = new ProfessorModel(){
                                 UserId = userBD.Id,
@@ -288,7 +288,7 @@ namespace ClassHome.Controllers
             return View(model: returnUrl);
         }
 
-        [Authorize(Roles = "administrador")]
+/*         [Authorize(Roles = "administrador")]
         public async Task<IActionResult> AddProfessor(int id)
         {
             var user = await _userManager.FindByIdAsync(id.ToString());
@@ -306,7 +306,7 @@ namespace ClassHome.Controllers
                 };
 
 
-                var resultado = await _userManager.AddToRoleAsync(user, "coordenador");
+                var resultado = await _userManager.AddToRoleAsync(user, "Professor");
                 if (resultado.Succeeded)
                 {
                     var result = await _userManager.RemoveFromRoleAsync(user, "user");
@@ -357,7 +357,7 @@ namespace ClassHome.Controllers
                 return RedirectToAction(nameof(Index));
             }
         }
-
+ */
         public async Task<IActionResult> Perfil(int id)
         {
             var utilizador = await _context.Useres.FindAsync(id);

@@ -5,15 +5,16 @@ using ClassHome.Models;
 
 namespace ClassHome
 {
-    public class ProfessorModel
+    public class TurmaUserModel
     {
-        [Key]
-        public int ProfessorId { get; set; }
         public int UserId { get; set; }
         
+        public int TurmaId { get; set; }
+
         [ForeignKey("UserId")]
-        public UserModel User { get; set; }
-        ICollection<ProfessorDisciplinaModel> Disciplinas {get; set; } 
-        ICollection<TurmaUserModel> Turmas {get; set; } 
+        public UserModel User {get; set;}
+
+        [ForeignKey("TurmaId")]
+        public TurmaModel Turma {get; set;}
     }
-}
+} 

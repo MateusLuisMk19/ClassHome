@@ -24,7 +24,6 @@ namespace ClassHome.Models
             get => (int)Math.Floor((DateTime.Now - DataNascimento).TotalDays / 365.25);
         }
 
-        [NotMapped]
         [Display(Name = "Tipo de Utilizador")]
         public string TUsers { get; set; }
         

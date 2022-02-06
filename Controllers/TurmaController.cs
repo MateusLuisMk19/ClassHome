@@ -6,6 +6,7 @@ using ClassHome.Extensions;
 using ClassHome.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace ClassHome.Controllers
@@ -18,11 +19,17 @@ namespace ClassHome.Controllers
         {
             this._context = context;
         }
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            var ProffInTurma = _context.TurmaUser.OrderBy(x => x.UserId).AsNoTracking();
+
+            ViewBag.ProffInTurma = ProffInTurma;
+
             return View(await _context.Turmas.OrderBy(x => x.NomeCurso).AsNoTracking().ToListAsync());
         }
 
+        [Authorize(Roles = "Professor")]
         [HttpGet]
         public async Task<IActionResult> Criar(int? id)
         {
@@ -43,6 +50,7 @@ namespace ClassHome.Controllers
             return _context.Turmas.Any(x => x.TurmaId == id);
         }
 
+        [Authorize(Roles = "Professor")]
         [HttpPost]
         public async Task<IActionResult> Criar(int? id, [FromForm] TurmaModel turma)
         {
@@ -55,6 +63,12 @@ namespace ClassHome.Controllers
                         _context.Turmas.Update(turma);
                         if (await _context.SaveChangesAsync() > 0)
                         {
+                            var tp = new TurmaUserModel();
+                            tp.UserId = turma.CriadorId;
+                            tp.TurmaId = turma.TurmaId;
+
+                            _context.TurmaUser.Add(tp);
+                            _context.SaveChanges();
                             this.MostrarMensagem("Turma editada.");
                         }
                         else
@@ -79,6 +93,14 @@ namespace ClassHome.Controllers
                         _context.Turmas.Add(turma);
                         if (await _context.SaveChangesAsync() > 0)
                         {
+                            var tp = new TurmaUserModel();
+                            tp.UserId = turma.CriadorId;
+                            tp.TurmaId = turma.TurmaId;
+                            tp.User = _context.Useres.FirstOrDefault(x => x.Id == turma.CriadorId);
+
+                            _context.TurmaUser.Add(tp);
+                            _context.SaveChanges();
+
                             ViewBag.Turmaid = turma.TurmaId;
                             this.MostrarMensagem("Nova turma criada.");
                         }
@@ -96,6 +118,67 @@ namespace ClassHome.Controllers
             }
         }
 
+        [Authorize(Roles = "Professor")]
+        [HttpGet]
+        public IActionResult AddProff(int? id)
+        {
+
+            var turma = _context.Turmas.FirstOrDefault(x => x.TurmaId == id);
+            var ProffInTurma = _context.TurmaUser.OrderBy(x => x.UserId).Where(x => x.TurmaId == turma.TurmaId).AsNoTracking();
+
+            var prf = _context.Useres.Where(x => x.Id != turma.CriadorId).OrderBy(x => x.NomeCompleto).Where(p => p.TUsers == "Professor").AsNoTracking().ToList();
+            var ppp = new List<UserModel>();
+            var count = 0;
+            var user = new UserModel();
+
+            foreach (var n in prf)
+            {
+                foreach (var p in ProffInTurma)
+                {
+                    if (n.Id == p.UserId)
+                    {
+                        count++;
+                        user = n;
+                        ppp.Add(n);
+                    }
+                }
+            }
+
+            if (count > 0)
+            {
+                foreach (var us in ppp)
+                {
+                    prf.Remove(us);
+                }
+            }
+            
+            var prfSelectList = new SelectList(prf,
+                nameof(UserModel.Id), nameof(UserModel.NomeCompleto));
+
+            ViewBag.ProffInTurma = ProffInTurma;
+            ViewBag.PRF = prfSelectList;
+            ViewBag.TurmaId = turma;
+
+            return View(new TurmaUserModel() { TurmaId = id.Value });
+        }
+
+        [Authorize(Roles = "Professor")]
+        [HttpPost]
+        public IActionResult AddProffPost([FromForm] TurmaUserModel turmauser)
+        {
+
+            var tp = new TurmaUserModel();
+            tp.UserId = turmauser.UserId;
+            tp.TurmaId = turmauser.TurmaId;
+            tp.User = _context.Useres.FirstOrDefault(x => x.Id == turmauser.UserId);
+
+            _context.TurmaUser.Add(tp);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [Authorize(Roles = "Professor")]
         [HttpGet]
         public async Task<IActionResult> Excluir(int? id)
         {
@@ -115,6 +198,7 @@ namespace ClassHome.Controllers
             return View(turma);
         }
 
+        [Authorize(Roles = "Professor")]
         [HttpPost]
         public async Task<IActionResult> Excluir(int id)
         {

@@ -25,6 +25,7 @@ namespace ClassHome.ViewModels
         [Display(Name = "Comentario")]
         public int ComentarioId { get; set; }
         public string ComentarioTexto { get; set; }
+        
 
     }
 }

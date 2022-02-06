@@ -19,6 +19,8 @@ namespace ClassHome.Controllers
         {
             this._context = context;
         }
+  
+        [Authorize]
         public async Task<IActionResult> Index(int id)
         {
             var idTurma = _context.Turmas.FirstOrDefault(x => x.TurmaId == id);
@@ -28,6 +30,7 @@ namespace ClassHome.Controllers
 
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Criar(int? id, int idTrel)
         {
@@ -52,6 +55,7 @@ namespace ClassHome.Controllers
             return _context.Disciplinas.Any(x => x.DisciplinaId == id);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Criar(int? id, [FromForm] DisciplinaModel disciplina)
         {
@@ -105,6 +109,7 @@ namespace ClassHome.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Excluir(int? id)
         {
@@ -129,6 +134,7 @@ namespace ClassHome.Controllers
             return View(disciplina);
         }
 
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Excluir(int id)
         {
