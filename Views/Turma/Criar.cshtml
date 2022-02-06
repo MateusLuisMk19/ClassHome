@@ -16,7 +16,7 @@
 <h1 class="text-light">@ViewBag.Subtitulo</h1>
 <hr>
 
-<form asp-action="Criar" class="row">
+<form asp-action="Criar" asp-route-idCriador="@Model.CriadorId" class="row">
     <input type="hidden" asp-for="@Model.TurmaId">
     <div class="form-group col-sm-8 col-lg-3">
         <div class="form-group col-3 visually-hidden">

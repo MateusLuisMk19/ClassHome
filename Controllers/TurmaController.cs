@@ -52,7 +52,7 @@ namespace ClassHome.Controllers
 
         [Authorize(Roles = "Professor")]
         [HttpPost]
-        public async Task<IActionResult> Criar(int? id, [FromForm] TurmaModel turma)
+        public async Task<IActionResult> Criar(int? id, [FromForm] TurmaModel turma, int? idCriador)
         {
             if (ModelState.IsValid)
             {
@@ -60,15 +60,12 @@ namespace ClassHome.Controllers
                 {
                     if (TurmaExiste(id.Value))
                     {
+                        if(turma.CriadorId != idCriador.Value)
+                            turma.CriadorId = idCriador.Value;
+    
                         _context.Turmas.Update(turma);
                         if (await _context.SaveChangesAsync() > 0)
                         {
-                            var tp = new TurmaUserModel();
-                            tp.UserId = turma.CriadorId;
-                            tp.TurmaId = turma.TurmaId;
-
-                            _context.TurmaUser.Add(tp);
-                            _context.SaveChanges();
                             this.MostrarMensagem("Turma editada.");
                         }
                         else
