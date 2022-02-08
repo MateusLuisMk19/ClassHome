@@ -18,8 +18,8 @@
         @if (!editando)
         {
             <div class="form-group">
-                <label asp-for="@Model.TUsers"></label><br>
-                <select asp-for="@Model.TUsers" class="form-control" 
+                <label asp-for="@Model.TUsers">Tipo de utilizador</label><br>
+                <select asp-for="@Model.TUsers" class="form-control"
                 asp-items="@ViewBag.TipoUser">
                     <option disabled selected>Escolha o tipo de utilizador</option>
                 </select>

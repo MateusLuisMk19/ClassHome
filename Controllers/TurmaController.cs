@@ -1,8 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ClassHome.Extensions;
 using ClassHome.Models;
+using ClassHome.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,12 +21,14 @@ namespace ClassHome.Controllers
         {
             this._context = context;
         }
-  
+
         [Authorize]
         public async Task<IActionResult> Index(int id)
         {
             var idTurma = _context.Turmas.FirstOrDefault(x => x.TurmaId == id);
+            var ProffInDisciplina = _context.ProfessorDisciplina.OrderBy(x => x.ProfessorId).AsNoTracking();
 
+            ViewBag.ProffInDisciplina = ProffInDisciplina;
             ViewBag.TurmaId = idTurma;
             return View(await _context.Disciplinas.OrderBy(x => x.Nome).Include(x => x.Turma).Where(x => x.TurmaId == id).AsNoTracking().ToListAsync());
 
@@ -82,10 +86,17 @@ namespace ClassHome.Controllers
                 }
                 else
                 {
-                    var disciplinaG = _context.Disciplinas.FirstOrDefault(x => x.Nome == disciplina.Nome);
-                    if (disciplinaG != null)
+                    var disciplinaG = _context.Disciplinas.OrderBy(x => x.Nome).Where(x => x.Nome == disciplina.Nome);
+                    if (disciplinaG.Count() > 0)
                     {
-                        this.MostrarMensagem("Esta turma já existe.", true);
+                        foreach (var dis in disciplinaG)
+                        {
+                            if (disciplina.TurmaId == dis.TurmaId)
+                            {
+                                this.MostrarMensagem("Esta disciplina já existe.", true);
+
+                            }
+                        }
                     }
                     else
                     {
@@ -95,16 +106,16 @@ namespace ClassHome.Controllers
                             var dp = new ProfessorDisciplinaModel();
                             dp.DisciplinaId = disciplina.DisciplinaId;
                             dp.ProfessorId = disciplina.CriadorId;
-                            
+
                             _context.ProfessorDisciplina.Add(dp);
                             _context.SaveChanges();
 
                             ViewBag.DisciplinaId = disciplina.TurmaId;
-                            this.MostrarMensagem("Nova turma criada.");
+                            this.MostrarMensagem("Nova disciplina criada.");
                         }
                         else
                         {
-                            this.MostrarMensagem("Erro ao criar turma.", true);
+                            this.MostrarMensagem("Erro ao criar disciplina.", true);
                         }
                     }
                 }
@@ -115,6 +126,7 @@ namespace ClassHome.Controllers
                 return View(disciplina);
             }
         }
+
 
         [Authorize]
         [HttpGet]
@@ -160,6 +172,182 @@ namespace ClassHome.Controllers
             {
                 this.MostrarMensagem("Disciplina não encontrada.", true);
                 return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [Authorize(Roles = "Professor")]
+        [HttpGet]
+        public IActionResult AddProff(int? id)
+        {
+
+            var disciplina = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == id);
+            var ProffInDisciplina = _context.ProfessorDisciplina.OrderBy(x => x.ProfessorId).Where(x => x.DisciplinaId == disciplina.DisciplinaId).AsNoTracking();
+            var ProffInTurma = _context.TurmaUser.OrderBy(x => x.UserId).Where(x => x.TurmaId == disciplina.TurmaId).AsNoTracking();
+
+            var prf = _context.Useres.Where(x => x.Id != disciplina.CriadorId).OrderBy(x => x.NomeCompleto).Where(p => p.TUsers == "Professor").AsNoTracking().ToList();
+            var idsTurma = new List<int>();
+            var PApv = new List<UserModel>();
+            var inTurma = false;
+            var user = new List<UserModel>();
+
+            foreach (var n in prf)
+            {
+                foreach (var PinT in ProffInTurma)
+                {
+                    if (n.Id == PinT.UserId) //Está na turma
+                    {
+                        inTurma = true;
+                    }
+
+                    if (inTurma) //Está na turma
+                    {
+                        idsTurma.Add(n.Id);
+                        foreach (var p in ProffInDisciplina)
+                        {
+                            if (n.Id == p.ProfessorId) // Está na disciplina
+                            {
+                                idsTurma.Remove(n.Id);
+                            }
+                        }
+                        if (prf.Count <= 1)
+                            break;
+
+                        inTurma = false;
+                    }
+
+                }
+                if (prf.Count <= 1)
+                    break;
+            }
+            foreach (var us in prf)
+            {
+                if (idsTurma.Contains(us.Id))
+                {
+                    PApv.Add(us);
+                }
+            }
+
+            var prfSelectList = new SelectList(PApv,
+                nameof(UserModel.Id), nameof(UserModel.NomeCompleto));
+
+            ViewBag.ProffInDisciplina = ProffInDisciplina;
+            ViewBag.DCP = prfSelectList;
+            ViewBag.DisciplinaId = disciplina;
+
+            return View(new ProfessorDisciplinaModel() { DisciplinaId = id.Value });
+        }
+
+        [Authorize(Roles = "Professor")]
+        [HttpPost]
+        public IActionResult AddProffPost([FromForm] ProfessorDisciplinaModel proffDis)
+        {
+            if (proffDis.ProfessorId != 0)
+            {
+                var disciplina = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == proffDis.DisciplinaId);
+
+                var dp = new ProfessorDisciplinaModel();
+                dp.DisciplinaId = proffDis.DisciplinaId;
+                dp.ProfessorId = proffDis.ProfessorId;
+
+                _context.ProfessorDisciplina.Add(dp);
+                _context.SaveChanges();
+
+                this.MostrarMensagem("Professor adicionado à disciplina.");
+
+                return RedirectToAction("Index", new RouteValueDictionary(new { Id = disciplina.TurmaId }));
+            }
+            else
+            {
+                var disciplina = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == proffDis.DisciplinaId);
+                this.MostrarMensagem("Não selecionou nenhum professor.", true);
+
+                return RedirectToAction("Index", new RouteValueDictionary(new { Id = disciplina.TurmaId }));
+
+
+            }
+
+        }
+
+        [Authorize]
+        public IActionResult Utilizadores(int turmaId)
+        {
+            var tur = _context.Turmas.FirstOrDefault(x => x.TurmaId == turmaId);
+            var ProffInTurma = _context.TurmaUser.OrderBy(x => x.UserId).Where(x => x.TurmaId == turmaId).AsNoTracking().ToList();
+            var professores = new List<UserModel>();
+            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
+            var AlunosInTurma = new List<UserModel>();
+            var MatriculasTurma = _context.Matriculas.Where(x => x.TurmaId == turmaId).AsNoTracking().ToList();
+
+            foreach (var matricula in MatriculasTurma)
+            {
+                foreach (var aluno in Alunos)
+                {
+                    if (matricula.AlunoId == aluno.Id)
+                    {
+                        AlunosInTurma.Add(aluno);
+                    }
+                }
+            }
+
+            foreach (var turma in ProffInTurma)
+            {
+                var us = _context.Useres.FirstOrDefault(x => x.Id == turma.UserId);
+                professores.Add(us);
+            }
+
+            ViewBag.Turma = tur;
+            ViewBag.Professores = professores;
+            return View(AlunosInTurma);
+        }
+
+        [Authorize(Roles = "Professor")]
+        [HttpGet]
+        public IActionResult AddAluno(int turmaId)
+        {
+            var tur = _context.Turmas.FirstOrDefault(x => x.TurmaId == turmaId);
+            var disciplinas = _context.Disciplinas.OrderBy(x => x.Nome).Where(x => x.TurmaId == turmaId).AsNoTracking().ToList();
+            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
+
+            var AlunoSelectList = new SelectList(Alunos,
+                nameof(UserModel.Id), nameof(UserModel.NomeCompleto));
+            var DisciplinaSelectList = new SelectList(disciplinas,
+                nameof(DisciplinaModel.DisciplinaId), nameof(DisciplinaModel.Nome));
+
+            ViewBag.Turma = tur;
+            ViewBag.AIS = AlunoSelectList;
+            ViewBag.Disciplinas = DisciplinaSelectList;
+
+            return View(new MatriculaModel());
+        }
+
+        [Authorize(Roles = "Professor")]
+        [HttpPost]
+        public IActionResult AddAlunoPost([FromForm] MatriculaModel matricula)
+        {
+            if(matricula.AlunoId == 0 || matricula.DisciplinaId == 0)
+            {
+                if(matricula.AlunoId == 0)
+                    this.MostrarMensagem("Não selecionou nenhum aluno.", true);
+
+                if(matricula.DisciplinaId == 0)
+                    this.MostrarMensagem("Não selecionou nenhuma disciplina.", true);
+
+                return RedirectToAction("AddAluno", new RouteValueDictionary(new { matricula.TurmaId }));
+
+            }
+            else
+            {
+                var disciplina = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == matricula.DisciplinaId);
+
+                var mt = new MatriculaModel();
+                mt.DisciplinaId = matricula.DisciplinaId;
+                mt.AlunoId = matricula.AlunoId;
+                mt.TurmaId = matricula.TurmaId;
+
+                _context.Matriculas.Add(mt);
+                _context.SaveChanges();
+
+                return RedirectToAction("Utilizadores", new RouteValueDictionary(new { matricula.TurmaId }));
             }
         }
     }

@@ -5,6 +5,7 @@
     ViewBag.Subtitulo = "Turmas";
 
     var bkg = "card col-3 mb-3 m-5 text-light bg-dark";
+    var btnOp = "bg-opacity-30 bg-secondary p-1 rounded-circle";
 
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
     IEnumerable<TurmaUserModel> UIT = ViewBag.ProffInTurma;
@@ -18,7 +19,7 @@
     {
         <div class="col m-2 mt-4">
             <a asp-action="Criar" class="w-50 h-50" title="Criar Turma">
-                <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-plus-circle"
                 viewBox="0 0 16 16">
                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                     <path
@@ -42,7 +43,7 @@
                 {
                     @if (turma.TurmaId == rel.TurmaId)
                     {
-                        @if (rel.UserId == usuarioLog.Id)
+                        @if (rel.UserId == usuarioLog.Id || User.IsInRole("administrador"))
                         {
                             <div class="@bkg">
                                 <div class="card-header pt-3">
@@ -53,21 +54,21 @@
                                         {
                                             @if (turma.CriadorId == usuarioLog.Id)
                                             {
-                                                <a asp-action="AddProff" asp-route-id="@turma.TurmaId" class="editar link-success"
+                                                <a asp-action="AddProff" asp-route-id="@turma.TurmaId" class="@btnOp link-success "
                         title="Adicionar professor à turma">
-                                                    <i class="bi bi-person-plus-fill bg-opacity-30 bg-secondary p-1 rounded-circle"></i>
+                                                    <i class="bi bi-person-plus-fill"></i>
                                                 </a>
                                             }
                                             
                                             <a asp-action="Criar" asp-route-id="@turma.TurmaId"
-                        class="editar link-dark bg-opacity-30 bg-secondary p-1 rounded-circle" title="Editar Turma">
+                        class="link-dark @btnOp" title="Editar Turma">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
 
                                             @if (turma.CriadorId == usuarioLog.Id)
                                             {
                                                 <a asp-action="Excluir" asp-route-id="@turma.TurmaId"
-                        class="apagar link-danger bg-opacity-30 bg-secondary p-1 rounded-circle" title="Excluir Turma">
+                        class="link-danger @btnOp" title="Excluir Turma">
                                                     <i class="bi bi-trash" style="margin-right: 0;"></i>
                                                 </a>
                                             }
@@ -83,8 +84,14 @@
                                 </div>
                             </div>
                         }
+                        @if(User.IsInRole("administrador"))
+                            break;
                     }
+                    @if(User.IsInRole("administrador"))
+                            break;
                 }
+                @if(User.IsInRole("administrador"))
+                            break;
             }
         }
     </div>

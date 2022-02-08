@@ -1,0 +1,112 @@
+@model IEnumerable<UserModel>
+@inject UserManager<UserModel> _userManager
+@{
+    TurmaModel turma = ViewBag.Turma;
+    ViewBag.Subtitulo = "Utilizadores em " + turma.NomeCurso;
+
+    IEnumerable<UserModel> Proffs = ViewBag.Professores;
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+
+}
+<header class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        <h2 class="text-primary">@ViewBag.Subtitulo</h2>
+    </div>
+    <div>
+        @if (User.IsInRole("Professor"))
+        {
+            <a asp-action="AddAluno" asp-route-turmaId="@turma.TurmaId" class="btn btn-primary">Adicionar Aluno</a>
+        }
+    </div>
+</header>
+<hr>
+
+<partial name="_MensagemPartial" />
+<div class="p-4">
+    <div>
+        <h2>Professores</h2>
+        @if (Proffs.Count() > 0)
+        {
+            <table class="table table-striped tabela">
+                <thead>
+                    <tr>
+                        <th>Nome </th>
+                        <th>Email</th>
+                        @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Proffs)
+                    {
+                        var utilizador = Proffs.FirstOrDefault(u => u.Id == user.Id);
+                        var role = _userManager.GetRolesAsync(utilizador).Result;
+
+                        <tr>
+                            <td><a class="text-decoration-none" asp-action="perfil"
+                            asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
+                            <td>@user.Email</td>
+
+                            @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
+                            {
+                                <td>
+                                    @if (user.Id != usuarioLog.Id)
+                                    {
+                                        <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
+                                            <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+    <div>
+        <h2>Alunos</h2>
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-striped tabela">
+                <thead>
+                    <tr>
+                        <th>Nome </th>
+                        <th>Email</th>
+                        @if (User.IsInRole("Professor"))
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var USE in Model)
+                    {
+                        <tr>
+                            <td><a class="text-decoration-none" asp-action="perfil"
+                            asp-route-id="@USE.Id"><b>@USE.NomeCompleto</b></a></td>
+                            <td>@USE.Email</td>
+
+                            @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
+                            {
+                                <td>
+                                    <a asp-action="Excluir" asp-route-id="@USE.Id" class="btn btn-sm btn-danger">
+                                        <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Não há nenhum aluno na turma.</p>
+        }
+    </div>
+</div>
+
+<a asp-action="Index" asp-route-id="@turma.TurmaId" class="p-3   btn btn-primary float-end rounded-circle text-decoration-none link-white">
+    <i class="bi bi-arrow-left"></i>Voltar
+</a>

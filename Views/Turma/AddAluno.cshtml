@@ -1,0 +1,42 @@
+@model MatriculaModel
+@{
+    TurmaModel turma = ViewBag.Turma;
+    ViewBag.Subtitulo = "Add Aluno à " + turma.NomeCurso;
+
+    var discRel = ViewBag.DisciplinaId;
+
+}
+
+<h1 class="text-light">@ViewBag.Subtitulo</h1>
+<hr>
+
+<partial name="_MensagemPartial"></partial>
+
+<form asp-action="AddAlunoPost" class="row">
+    <input type="hidden" asp-for="@Model.MatriculaId">
+    <div class="form-group col-sm-8 col-lg-3">
+
+        <label asp-for="@Model.AlunoId">Alunos</span></label><br>
+        <select asp-for="@Model.AlunoId" class="form-control" asp-items="@(IEnumerable<SelectListItem>)ViewBag.AIS">
+            <option disabled selected>Escolha o aluno</option>
+        </select>
+        <span asp-validation-for="@Model.AlunoId" class="text-danger"></span>
+
+        <label asp-for="@Model.DisciplinaId">Disciplinas</span></label><br>
+        <select asp-for="@Model.DisciplinaId" class="form-control"
+            asp-items="@(IEnumerable<SelectListItem>)ViewBag.Disciplinas">
+            <option disabled selected>Escolha a Disciplina</option>
+        </select>
+        <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span>
+        
+        <div class="form-group col-3 visually-hidden">
+            <label asp-for="@Model.TurmaId">TurmaId</label><br>
+            <input asp-for="@Model.TurmaId" value="@turma.TurmaId" class="form-control col-lg-">
+            <span asp-validation-for="@Model.TurmaId" class="text-danger"></span><br>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a asp-action="Index" asp-route-id="@turma.TurmaId" class="btn btn-outline-dark">Cancelar</a>
+        <button class="btn btn-primary" type="submit">Salvar</button>
+    </div>
+</form>

@@ -1,0 +1,125 @@
+@model IEnumerable<UserModel>
+@inject UserManager<UserModel> _userManager
+@{
+    DisciplinaModel disciplina = ViewBag.Disciplina;
+    ViewBag.Subtitulo = "Utilizadores na disciplina de " + disciplina.Nome;
+
+    IEnumerable<UserModel> Proffs = ViewBag.Professores;
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+
+}
+
+
+
+
+<ul class="nav nav-tabs justify-content-center position-absolute align-content-center link-info">
+    <li class="nav-item">
+        <a class="nav-link" asp-route-id="@disciplina.DisciplinaId" asp-action="Index">Principal</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link">Trabalhos</a>
+    </li>
+    <li class="nav-item">
+        <a asp-action="Utilizadores" asp-route-disciplinaId="@disciplina.DisciplinaId"
+            class="nav-link active">Utilizadores</a>
+    </li>
+</ul>
+
+<div class="bg-black  w-100 h-25 border-3 p-5 rounded-top" style="border-radius: 3%;">
+    <h2 class="pt-5 pb-3">@ViewBag.Subtitulo</h2>
+</div>
+
+
+<header class="d-flex justify-content-between align-items-center mt-4">
+
+</header>
+<hr>
+
+<partial name="_MensagemPartial" />
+<div class="p-4 row">
+    <div class="col">
+        <div class="row">
+            <h2 class="col-5">Professores</h2>
+        </div>
+        @if (Proffs.Count() > 0)
+        {
+            <table class="table table-striped tabela">
+                <thead>
+                    <tr>
+                        <th>Nome </th>
+                        @if (User.IsInRole("Professor") && usuarioLog.Id == disciplina.CriadorId)
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Proffs)
+                    {
+                        var utilizador = Proffs.FirstOrDefault(u => u.Id == user.Id);
+                        var role = _userManager.GetRolesAsync(utilizador).Result;
+
+                        <tr>
+                            <td><a class="text-decoration-none" asp-action="perfil"
+                            asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
+
+                            @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
+                            {
+                                <td>
+                                    @if (user.Id != usuarioLog.Id)
+                                    {
+                                        <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
+                                            <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                    }
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        <a asp-controller="Turma" asp-action="Index" asp-route-id="@disciplina.TurmaId" class="btn btn-primary mt-2 link-white">
+            Voltar à Turmas
+        </a>
+    </div>
+    <div class="col ">
+        <div class="row">
+            <h2 class="col-3">Alunos</h2>
+        </div>
+        @if (Model.Count() > 0)
+        {
+            <table class="table table-striped tabela ">
+                <thead>
+                    <tr>
+                        <th>Nome </th>
+                        @if (User.IsInRole("Professor"))
+                        {
+                            <th></th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var USE in Model)
+                    {
+                        <tr>
+                            <td><a class="text-decoration-none" asp-action="perfil"
+                            asp-route-id="@USE.Id"><b>@USE.NomeCompleto</b></a></td>
+
+                            @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
+                            {
+                                <td>
+                                    <a asp-action="Excluir" asp-route-id="@USE.Id" class="btn btn-sm btn-danger">
+                                        <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Não há nenhum aluno na turma.</p>
+        }
+    </div>
+</div>

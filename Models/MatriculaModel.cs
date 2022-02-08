@@ -9,10 +9,12 @@ namespace ClassHome
     {
         [Key]
         public int MatriculaId { get; set; }
+        
         public int AlunoId { get; set; }
     
         [ForeignKey("AlunoId")]
-        public AlunoModel Aluno {get; set;}
+        public UserModel Aluno {get; set;}
+        public int TurmaId { get; set; }
         public int DisciplinaId { get; set; }
 
         [ForeignKey("DisciplinaId")]

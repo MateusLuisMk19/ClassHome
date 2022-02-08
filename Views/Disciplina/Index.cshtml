@@ -6,14 +6,6 @@
     IEnumerable<Publicacao> PUB = ViewBag.Publicacoes;
 
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
-    
-    var controllerAtual = ViewContext.RouteData.Values["controller"].ToString();
-    var actionAtual = ViewContext.RouteData.Values["action"].ToString();
-
-    var menuDIn = controllerAtual == "DInner" ? "active" : "";
-    var mDIndex = controllerAtual == "DInner" ? (actionAtual == "Index" ? "" : "active") : "";
-    var mDTrab = actionAtual == "AcessoRestrito" ? "active" : "";
-    var mDAlun = actionAtual == "AcessoRestrito" ? "active" : "";
 
     var publicador = new UserModel();
     var comentador = new UserModel();
@@ -24,13 +16,13 @@
 
 <ul class="nav nav-tabs justify-content-center position-absolute align-content-center link-info">
     <li class="nav-item">
-        <a class="nav-link @menuDIn A">Principal</a>
+        <a class="nav-link active">Principal</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link @mDTrab">Trabalhos</a>
+        <a class="nav-link">Trabalhos</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link @mDAlun">Alunos</a>
+        <a asp-action="Utilizadores" asp-route-disciplinaId="@DisRel.DisciplinaId" class="nav-link">Utilizadores</a>
     </li>
 </ul>
 
@@ -39,7 +31,6 @@
 </div>
 
 <partial name="_MensagemPartial"></partial>
-
 
 <div class="container mt-3 ">
     <div class="row">
@@ -58,6 +49,9 @@
                     <p class="card-text" title="Descrição da Disciplina"></p>
                 </div>
             </div>
+            <a asp-controller="Turma" asp-action="Index" asp-route-id="@DisRel.TurmaId" class="btn btn-primary mt-2 link-white">
+                Voltar à Turmas
+            </a>
         </div>
         
         <div class="col row">
@@ -85,7 +79,7 @@
                     </div>
                 </form>
             </div>
-
+            
             <div class="w-100"></div>
             <hr class="mt-3 text-black">
             <div class="w-100"></div>

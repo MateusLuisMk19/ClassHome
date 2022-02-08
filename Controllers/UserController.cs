@@ -144,12 +144,13 @@ namespace ClassHome.Controllers
                         {
                             var aluno = new AlunoModel(){
                                 UserId = userBD.Id,
+                                User = _context.Useres.FirstOrDefault(x=> x.Id == userBD.Id)
                             };
                             _context.Alunos.Add(aluno);
                             _context.SaveChanges();
-                            _context.SaveChanges();
                             var res = await _userManager.UpdateAsync(userBD);
                         }
+                        /* 
                         else if(role == "Professor")
                         {
                             var professor = new ProfessorModel(){
@@ -158,7 +159,7 @@ namespace ClassHome.Controllers
                             _context.Professores.Add(professor);
                             _context.SaveChanges();
                             var res = await _userManager.UpdateAsync(userBD);
-                        }
+                        } */
 
                         var result = await _userManager.AddToRoleAsync(userBD, role);
                         if (result.Succeeded)

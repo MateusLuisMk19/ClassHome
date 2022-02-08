@@ -1,7 +1,8 @@
+@inject UserManager<UserModel> _userManager
 @if (Context.User.Identity.IsAuthenticated)
 {
-    @* var user = await _userManager.GetUserAsync(Context.User); *@
-    <a asp-controller="user" asp-action="perfil" class="nav-link text-black"><b>  @* @user.NomeCompleto.PrimeiraPalavra().ToUpper() *@</b></a>
+    var user = await _userManager.GetUserAsync(Context.User); 
+    <a asp-controller="user" asp-action="perfil" class="nav-link text-black">@user.NomeCompleto.PrimeiraPalavra().ToUpper()</a>
     <a class="nav-link pe-0 navbar-light botaoLog text-decoration-none" asp-controller="User" asp-action="Logout">Sair</a>
 }
 else

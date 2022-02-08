@@ -10,8 +10,8 @@ namespace ClassHome.Models
     {
         public DbSet<UserModel> Useres { get; set; }
         public DbSet<TurmaModel> Turmas { get; set; }
-        public DbSet<DisciplinaModel> Disciplinas { get; set; }
-        public DbSet<ProfessorModel> Professores { get; set; }
+        public DbSet<DisciplinaModel> Disciplinas { get; set; }/* 
+        public DbSet<ProfessorModel> Professores { get; set; } */
         public DbSet<AlunoModel> Alunos { get; set; }
         public DbSet<ProfessorDisciplinaModel> ProfessorDisciplina { get; set; } 
         public DbSet<TurmaUserModel> TurmaUser { get; set; } 
@@ -30,8 +30,8 @@ namespace ClassHome.Models
             modelBuilder.Entity<UserModel>().ToTable("User");
 
             modelBuilder.Entity<TurmaModel>().ToTable("Turma");
-            modelBuilder.Entity<DisciplinaModel>().ToTable("Disciplina");
-            modelBuilder.Entity<ProfessorModel>().ToTable("Professor");
+            modelBuilder.Entity<DisciplinaModel>().ToTable("Disciplina");/* 
+            modelBuilder.Entity<ProfessorModel>().ToTable("Professor"); */
             modelBuilder.Entity<AlunoModel>().ToTable("Aluno");
             modelBuilder.Entity<ProfessorDisciplinaModel>().ToTable("ProfessorDisciplina"); 
             modelBuilder.Entity<TurmaUserModel>().ToTable("TurmaUser"); 

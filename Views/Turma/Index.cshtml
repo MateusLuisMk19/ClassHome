@@ -1,28 +1,45 @@
 @model IEnumerable<DisciplinaModel>
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
 @{
 
     var bkg = "card col-3 mb-3 m-5 text-light bg-dark";
-    
+    var btnOp = "bg-opacity-30 bg-secondary p-1 rounded-circle";
+
     TurmaModel TurmaRel = ViewBag.TurmaId;
 
-    ViewBag.Subtitulo = TurmaRel.NomeCurso;
+    ViewBag.Subtitulo = "Turma :: " + TurmaRel.NomeCurso;
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    IEnumerable<ProfessorDisciplinaModel> DCP = ViewBag.ProffInDisciplina;
 
 }
 
 <div class="row mt-5">
-    <div class="col-11">
+    <div class="col-8">
         <h1 class="text-primary">@ViewBag.Subtitulo</h1>
     </div>
-    <div class="col m-2 mt-4">
-        <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" class="w-50 h-50" title="Criar Disciplina">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-plus-circle"
-                viewBox="0 0 16 16">
-                <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                <path
-                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-            </svg>
-        </a>
-    </div> 
+    <div class="col">
+        
+        @if (User.IsInRole("Professor"))
+        {
+            <div class="float-end  m-4">
+                <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" class="w-50 h-50" title="Criar Disciplina">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
+                    class="bi bi-plus-circle" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
+                        <path
+                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+                    </svg>
+                </a>
+            </div>
+        }
+        <div class="float-end mt-4">
+            <a asp-action="Utilizadores" asp-route-turmaId="@TurmaRel.TurmaId" class="btn btn-primary ">
+                Utilizadores na Turma
+            </a>
+        </div>
+    </div>
 </div>
 
 <partial name="_MensagemPartial"></partial>
@@ -32,24 +49,68 @@
 
         @if (Model.Count() > 0)
         {
-            @foreach (var disciplina in Model)
+            @foreach (var rel in DCP)
             {
-                <div class="@bkg">
-                    <div class="card-header pt-3">
-                        <div class="float-start"></div>
-                        <div class="float-end ">
-                            <a asp-action="Criar" asp-route-id="@disciplina.DisciplinaId" class="editar link-secondary" title="Editar Disciplina" ><i class="bi bi-pencil"></i></a>
-                            <a asp-action="Excluir" asp-route-id="@disciplina.DisciplinaId" class="apagar link-danger" title="Excluir Disciplina"><i class="bi bi-trash" style="margin-right: 0; margin-left: 0.5vw;"></i></a>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <a asp-controller="Disciplina" asp-route-id="@disciplina.DisciplinaId" asp-action="Index"
+                @foreach (var disciplina in Model)
+                {
+                    @if (disciplina.DisciplinaId == rel.DisciplinaId)
+                    {
+                        @if (rel.ProfessorId == usuarioLog.Id || User.IsInRole("administrador"))
+                        {
+
+                            <div class="@bkg">
+                                <div class="card-header pt-3">
+                                    <div class="float-start"></div>
+                                    <div class="float-end ">
+                                        @if (User.IsInRole("Professor"))
+                                        {
+                                            @if (disciplina.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="AddProff" asp-route-id="@disciplina.DisciplinaId" class="@btnOp link-success"
+                        title="Adicionar professor à disciplina">
+                                                    <i class="bi bi-person-plus-fill"></i>
+                                                </a>
+                                            }
+
+                                            <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" asp-route-id="@disciplina.DisciplinaId"
+                        class="@btnOp link-dark" title="Editar Disciplina">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            @if (disciplina.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="Excluir" asp-route-id="@disciplina.DisciplinaId" class="@btnOp link-danger"
+                        title="Excluir Disciplina">
+                                                    <i class="bi bi-trash" style="margin-right: 0;"></i>
+                                                </a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                    @if (!(User.IsInRole("administrador")))
+                                    {
+                                        <a asp-controller="Disciplina" asp-route-id="@disciplina.DisciplinaId" asp-action="Index"
                     class="text-decoration-none nomeDT" title="Nome da Disciplina">
-                            <h4 class="card-title text-light">@disciplina.Nome</h4>
-                        </a>
-                        <p class="card-text" title="Descrição da Disciplina">@disciplina.Descricao</p>
-                    </div>
-                </div>            
+                                            <h4 class="card-title text-light">@disciplina.Nome</h4>
+                                        </a>
+                                    }
+                                    else
+                                    {
+                                        <h4 class="card-title text-light">@disciplina.Nome</h4>
+                                    }
+                                    <p class="card-text" title="Descrição da Disciplina">@disciplina.Descricao</p>
+                                </div>
+                            </div>
+                        }
+                        @if (User.IsInRole("administrador"))
+                            break;
+                    }
+                    @if (User.IsInRole("administrador"))
+                        break;
+                }
+                @if (User.IsInRole("administrador"))
+                    break;
             }
         }
     </div>

@@ -3,25 +3,13 @@
     var actionAtual = ViewContext.RouteData.Values["action"].ToString();
 
     var menuInicial = controllerAtual == "Home" ? "active" : "";
-    var menuUser = controllerAtual == "User" ? (actionAtual == "AcessoRestrito" ? "" : "active") : "";
-    var menuCategoria = controllerAtual == "Categoria" ? "active" : "";
-    var menuDocumento = controllerAtual == "Documento" ? "active" : "";
-    var menuUMedida = controllerAtual == "UMedida" ? "active" : "";
-    var menuFornecedor = controllerAtual == "Fornecedor" ? "active" : "";
-    var menuNivel = controllerAtual == "Nivel" ? "active" : "";
-    var menuProduto = controllerAtual == "Produto" ? "active" : "";
-    var menuEstoque = controllerAtual == "Estoque" ? "active" : "";
-    var menuRequisicao = controllerAtual == "Requisicao" ? "active" : "";
+    var menuDisciplina = controllerAtual == "Disciplina" ? "active" : "";
+    var menuTurma = controllerAtual == "Turma" ? "active" : "";
 
-    var opRequisicao = (actionAtual == "Index" && controllerAtual == "Requisicao") ? "active" : "";
-    var opRequisicaoPend = (actionAtual == "Pedido" && controllerAtual == "Requisicao") ? "active" : "";
-
-    var menu = controllerAtual == "Produto" ? "active" : "";
-
-    var menuDIn = controllerAtual == "DInner" ? "active" : "";
-    var mDIndex = controllerAtual == "DInner" ? (actionAtual == "Index" ? "" : "active") : "";
-    var mDTrab = actionAtual == "AcessoRestrito" ? "active" : "";
-    var mDAlun = actionAtual == "AcessoRestrito" ? "active" : "";
+    @* var opRequisicao = (actionAtual == "Index" && controllerAtual == "Requisicao") ? "active" : "";
+        var opRequisicaoPend = (actionAtual == "Pedido" && controllerAtual == "Requisicao") ? "active" : "";
+        var menuUser = controllerAtual == "User" ? (actionAtual == "AcessoRestrito" ? "" : "active") : "";
+    *@
 
 }
 
@@ -41,29 +29,33 @@
 
 <body style="padding-bottom: 80px" class="mb-3 bg-secondary">
     <nav class="navbar navbar-expand-sm navbar-light bg-light">
-        <div class="container-fluid">
+        <div class="container-fluid pt-0 pb-0 p-5">
             <a class="navbar-brand" asp-controller="Home" asp-action="Index">ClassHome</a>
 
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item col">
-                        <a class="nav-link @menuInicial" asp-controller="Home" asp-action="Index">Turma</a>
-                    </li>
-
-                    @if (User.Identity.IsAuthenticated)
+                    @if (controllerAtual == "Turma")
                     {
                         <li class="nav-item col">
-                            <a class="nav-link @menuUser" asp-controller="User" asp-action="Index">Utilizadores</a>
+                            <a class="nav-link " asp-controller="Home" asp-action="Index">Turmas</a>
+                        </li>
+                    }
+                    else if (controllerAtual == "Disciplina")
+                    {
+                        <li class="nav-item col">
+                            <a class="nav-link " asp-controller="Home" asp-action="Index">Disciplinas</a>
+                        </li>
+                    }
+                    @if (User.IsInRole("administrador"))
+                    {
+                        <li class="nav-item col">
+                            <a class="nav-link " asp-controller="User" asp-action="Index">Utilizadores</a>
                         </li>
                     }
                 </ul>
                 <div class="d-flex">
                     <partial name="_LoginLogoutLinkPartial" class="p-2 me-sm-2 m-2 " />
                 </div>
-                @* <form class="d-flex">
-                    <input class="form-control me-sm-2" type="text" placeholder="Search">
-                    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-                    </form> *@
             </div>
         </div>
     </nav>
@@ -78,7 +70,7 @@
         </div>
     </footer>
 
-    <script src="/lib/bootstrap5/dist/js/bootstrap.min.js"></script> 
+    <script src="/lib/bootstrap5/dist/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="~/js/style.js"></script>
 
     @RenderSection("Scripts", false)

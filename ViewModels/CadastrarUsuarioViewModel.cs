@@ -42,7 +42,7 @@ namespace ClassHome.ViewModels
         [MaxLength(11, ErrorMessage = "O tamanho máximo do campo {0} é de {1} caracteres.")]
         public string Telefone { get; set; }
 
-        [NotMapped]
+        [Required(ErrorMessage = "É obrigatório selecionar o tipo de utilizador.")]
         public string TUsers { get; set; }
 
         [NotMapped]

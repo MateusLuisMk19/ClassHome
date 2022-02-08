@@ -60,9 +60,9 @@ namespace ClassHome.Controllers
                 {
                     if (TurmaExiste(id.Value))
                     {
-                        if(turma.CriadorId != idCriador.Value)
+                        if (turma.CriadorId != idCriador.Value)
                             turma.CriadorId = idCriador.Value;
-    
+
                         _context.Turmas.Update(turma);
                         if (await _context.SaveChangesAsync() > 0)
                         {
@@ -148,7 +148,7 @@ namespace ClassHome.Controllers
                     prf.Remove(us);
                 }
             }
-            
+
             var prfSelectList = new SelectList(prf,
                 nameof(UserModel.Id), nameof(UserModel.NomeCompleto));
 
@@ -163,16 +163,29 @@ namespace ClassHome.Controllers
         [HttpPost]
         public IActionResult AddProffPost([FromForm] TurmaUserModel turmauser)
         {
+            if (turmauser.UserId != 0)
+            {
+                var tp = new TurmaUserModel();
+                tp.UserId = turmauser.UserId;
+                tp.TurmaId = turmauser.TurmaId;
+                tp.User = _context.Useres.FirstOrDefault(x => x.Id == turmauser.UserId);
 
-            var tp = new TurmaUserModel();
-            tp.UserId = turmauser.UserId;
-            tp.TurmaId = turmauser.TurmaId;
-            tp.User = _context.Useres.FirstOrDefault(x => x.Id == turmauser.UserId);
+                _context.TurmaUser.Add(tp);
+                _context.SaveChanges();
 
-            _context.TurmaUser.Add(tp);
-            _context.SaveChanges();
+                this.MostrarMensagem("Professor adicionado à turma.");
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            else
+            {
+                this.MostrarMensagem("Certifique-se de que selecionou o professor.", true);
+            }
+
+            return View("AddProff", turmauser.TurmaId);
+
+            
+
         }
 
         [Authorize(Roles = "Professor")]

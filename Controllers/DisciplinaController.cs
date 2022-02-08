@@ -298,5 +298,37 @@ namespace ClassHome.Controllers
             }
             return RedirectToAction("Index", new RouteValueDictionary(new { Controller = "Disciplina" }));
         }
+
+        [Authorize]
+        public IActionResult Utilizadores(int disciplinaId)
+        {
+            var disc = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == disciplinaId);
+            var ProffInDisc = _context.ProfessorDisciplina.OrderBy(x => x.ProfessorId).Where(x => x.DisciplinaId == disciplinaId).AsNoTracking().ToList();
+            var professores = new List<UserModel>();
+            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x=>x.TUsers == "Aluno").AsNoTracking().ToList();
+            var AlunosInDisc = new List<UserModel>();
+            var MatriculasDisc = _context.Matriculas.Where(x => x.DisciplinaId == disciplinaId).AsNoTracking().ToList();
+
+            foreach (var matricula in MatriculasDisc)
+            {
+                foreach (var aluno in Alunos)
+                {
+                    if (matricula.AlunoId == aluno.Id)
+                    {
+                        AlunosInDisc.Add(aluno);
+                    }
+                }
+            }
+
+            foreach (var disciplina in ProffInDisc)
+            {
+                var us = _context.Useres.FirstOrDefault(x => x.Id == disciplina.ProfessorId);
+                professores.Add(us);
+            }
+
+            ViewBag.Disciplina = disc;
+            ViewBag.Professores = professores;
+            return View(AlunosInDisc);
+        }
     }
 }
