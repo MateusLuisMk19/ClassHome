@@ -1,0 +1,22 @@
+@model DisciplinaModel
+@{
+
+    ViewBag.Subtitulo = "Remover de " + Model.Nome;
+
+    UserModel Aluno = ViewBag.Aluno;
+
+}
+
+<h1 class="text-light">@ViewBag.Subtitulo</h1>
+<hr>
+
+<h4>Deseja realmente remover <b class="text-danger">@Aluno.NomeCompleto</b>?</h4>
+
+
+<form asp-action="RemAlunoPost" asp-route-idProff="@Aluno.Id" asp-route-idDis="@Model.DisciplinaId" class="w-25">
+    <input type="hidden" asp-for="@Model.DisciplinaId">
+    <div class="mt-3">
+        <a asp-action="Index" asp-route-id="@Model.DisciplinaId" class="btn btn-success">Não</a>
+        <button class="btn btn-danger" type="submit">Sim</button>
+    </div>
+</form>

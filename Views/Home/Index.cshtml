@@ -1,0 +1,224 @@
+@model IEnumerable<TurmaModel>
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    ViewBag.Subtitulo = "Turmas";
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
+    var bkg = "card col-3 mb-3 m-4 text-light bg-dark";
+    var btnOp = "bg-opacity-30 @conf.Fundo p-1 rounded-circle";
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    IEnumerable<TurmaUserModel> UIT = ViewBag.ProffInTurma;
+    IEnumerable<MatriculaModel> AIT = ViewBag.AlunoInTurma;
+
+    var inTurma = false;
+    //ADM
+    var AllAlunos = _context.Useres.Where(x => x.TUsers == "Aluno").Count();
+    var AllProffs = _context.Useres.Where(x => x.TUsers == "Professor").Count();
+    var AllTurmas = _context.Turmas.Count();
+    var AllDisciplinas = _context.Disciplinas.Count();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-0 m-4 mt-4">
+    <div>
+        @if (!(User.IsInRole("administrador")))
+        {
+            <h4 class="@conf.TitleText">@ViewBag.Subtitulo</h4>
+        }
+    </div>
+    @if (User.IsInRole("Professor"))
+    {
+        <div class="m-4 mt-0 mb-0">
+            <a asp-action="Criar" class="@conf.BTNin" title="Criar Turma">Nova Turma</a>
+        </div>
+    }
+</div>
+
+<partial name="_MensagemPartial"></partial>
+
+<div class="container">
+    <div class="row d-flex justify-content-center align-items-stretch mt-3">
+
+        @if (Model.Count() > 0)
+        {
+            @if (User.IsInRole("Professor"))
+            {
+                @foreach (var rel in UIT)
+                {
+                    @foreach (var turma in Model)
+                    {
+                        @if (turma.TurmaId == rel.TurmaId)
+                        {
+                            @if (rel.UserId == usuarioLog.Id)
+                            {
+                                <div class="@bkg cartao" style="@conf.CardStyle">
+                                    <div class="@conf.CardCab pt-3 mb-1" style="@conf.CardStyleCab">
+                                        <div class="float-start @conf.Texto" title="Localização">@turma.Local</div>
+                                        <div class="float-end ">
+
+                                            @if (turma.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="AddProff" asp-route-id="@turma.TurmaId" class="@btnOp link-success "
+                        title="Adicionar professor à turma">
+                                                    <i class="bi bi-person-plus-fill"></i>
+                                                </a>
+                                            }
+
+                                            <a asp-action="Criar" asp-route-id="@turma.TurmaId" class=" @btnOp" title="Editar Turma">
+                                                <i class="bi bi-pencil"></i>
+                                            </a>
+
+                                            @if (turma.CriadorId == usuarioLog.Id)
+                                            {
+                                                <a asp-action="Excluir" asp-route-id="@turma.TurmaId" class="link-danger @btnOp "
+                        title="Excluir Turma">
+                                                    <i class="bi bi-trash " style="margin-right: 0;"></i>
+                                                </a>
+                                            }
+
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <a asp-controller="Turma" asp-route-id="@turma.TurmaId" asp-action="Index"
+                    class="text-decoration-none nomeDT" title="Nome do Curso">
+                                            <h4 class="card-title @conf.Texto">@turma.NomeCurso</h4>
+                                        </a>
+                                        <p class="card-text @conf.Texto" title="Descrição" style="font-size:70%">@turma.Descricao</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                }
+            }
+            else if (User.IsInRole("Aluno"))
+            {
+                @foreach (var turma in Model)
+                {
+                    inTurma = false;
+                    @foreach (var rel in AIT)
+                    {
+                        @if (turma.TurmaId == rel.TurmaId)
+                        {
+                            @if (rel.AlunoId == usuarioLog.Id)
+                            {
+                                inTurma = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    @if (inTurma)
+                    {
+                        <div class="@bkg cartao" style="@conf.CardStyle">
+                            <div class="@conf.CardCab pt-3 mb-1" style="@conf.CardStyleCab">
+                                <div class="float-start @conf.Texto" title="Localização">@turma.Local</div>
+                                <div class="float-end ">
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <a asp-controller="Turma" asp-route-id="@turma.TurmaId" asp-action="Index"
+                    class="text-decoration-none nomeDT" title="Nome do Curso">
+                                    <h4 class="card-title @conf.Texto">@turma.NomeCurso</h4>
+                                </a>
+                                <p class="card-text @conf.Texto" title="Descrição">@turma.Descricao</p>
+                            </div>
+                        </div>
+                    }
+                }
+            }
+        }
+
+        @if (User.IsInRole("administrador"))
+        {
+            <div class="@conf.DCPBoxColor shadow row @conf.DCPBoxText p-3 col-6 card mt-5">
+                <div class="">
+                    <a class="@conf.BTNin mt-3 float-end" asp-controller="User" asp-action="Cadastrar">Novo Utilizador</a>
+                    <h3 class="mt-3 @conf.TitleText float-start">Registo ClassHome</h3>
+                </div>
+                <div class="pt-0 pb-0 p-5">
+                    <div class="col">
+                        @if (AllAlunos > 0 || AllProffs > 0)
+                        {
+                            <table class="@conf.Tabela cartao @conf.DCPBoxColor shadow @conf.DCPBoxText">
+                                <thead>
+                                    <tr>
+                                        <th class="@conf.TabelaText">Utilizadores</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Professores</td>
+                                        <td>@AllProffs</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Alunos</td>
+                                        <td>@AllAlunos</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Não existe nenhum utilizador cadastrado.</p>
+                        }
+                    </div>
+                    <div class="col">
+                        @if (AllTurmas > 0)
+                        {
+                            <table class="@conf.Tabela cartao card @conf.DCPBoxColor shadow @conf.DCPBoxText">
+                                <thead>
+                                    <tr>
+                                        <th class="@conf.TabelaText">Turmas</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Turmas</td>
+                                        <td>@AllTurmas</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Não existem turmas.</p>
+                        }
+                    </div>
+                    <div class="col">
+                        @if (AllDisciplinas > 0)
+                        {
+                            <table class="@conf.Tabela cartao card @conf.DCPBoxColor shadow @conf.DCPBoxText">
+                                <thead>
+                                    <tr>
+                                        <th class="@conf.TabelaText">Disciplinas</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Disciplinas</td>
+                                        <td>@AllDisciplinas</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>Não existem disciplinas.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<style>
+    .cartao:hover {
+        transform: scale(1.02);
+    }
+</style>

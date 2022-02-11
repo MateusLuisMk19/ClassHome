@@ -1,0 +1,22 @@
+.tabela tr > th:last-child,
+.tabela tr > td:last-child
+{
+    width: 1%;
+    white-space: nowrap;
+    text-align: right;
+}
+
+th{
+    color: #fff;
+}
+
+.botaoLog
+{
+    color: black;
+}
+
+.nomeDT:hover{
+    font-size: 32px;
+    border: blanchedalmond;
+    box-shadow: 3Px ;
+}

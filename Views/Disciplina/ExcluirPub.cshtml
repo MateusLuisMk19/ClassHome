@@ -1,0 +1,23 @@
+@model Publicacao
+@{
+
+    ViewBag.Subtitulo = "Excluir Publicação";
+
+    DisciplinaModel DisRel = ViewBag.Disciplina;
+
+}
+
+<h1 class="text-light">@ViewBag.Subtitulo</h1>
+<hr>
+
+<div class="container col-5 p-5 shadow" style="border-radius: 7%;">
+    <h4>Deseja realmente excluir esta publicação?</span></h4>
+
+    <form asp-action="Excluir" asp-route-type="1" class="w-25">
+        <input type="hidden" asp-for="@Model.PublicacaoId">
+        <div class="mt-3">
+            <a asp-action="Index" asp-route-id="@DisRel.DisciplinaId" class="btn btn-success">Não</a>
+            <button class="btn btn-danger" type="submit">Sim</button>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,86 @@
+@model IEnumerable<UserModel>
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
+    ViewBag.Subtitulo = "Listagem de Utilizadores";
+@* 
+    var thstile = "text-light"; *@
+    
+    var perfil = ""; 
+}
+
+<header class="d-flex justify-content-between align-items-center mt-4">
+    <div>
+        <h4>@ViewBag.Subtitulo</h4>
+    </div>
+    <div>
+        @if (User.IsInRole("administrador"))
+        {
+            <a asp-action="Cadastrar" class="@conf.BTNin">Novo User</a>
+        }
+    </div>
+</header>
+<hr>
+
+<partial name="_MensagemPartial" />
+
+@if (Model.Count() > 0)
+{
+    <table class="@conf.Tabela">
+        <thead>
+            <tr>
+                <th class="@conf.TabelaText">Nome Completo</th>
+                <th class="@conf.TabelaText">Idade</th>
+                <th class="@conf.TabelaText">Email</th>
+                <th class="@conf.TabelaText">Telefone</th>
+                <th class="@conf.TabelaText">Perfil</th>
+                @if (User.IsInRole("administrador"))
+                {
+                    <th></th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in Model)
+            {
+                var utilizador = Model.FirstOrDefault(u => u.Id == user.Id);
+                var role = _userManager.GetRolesAsync(utilizador).Result;
+
+                <tr>
+                    <td><a class="text-decoration-none @conf.Texto"  asp-controller="User" asp-action="perfil" asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
+                    <td>@user.Idade</td>
+                    <td>@user.Email</td>
+                    <td>@user.PhoneNumber</td>
+                    <td>
+                        @{
+                            if (role.Contains("Professor"))
+                            {
+                            perfil = "Professor";
+                            }
+                            else if (role.Contains("Aluno"))
+                            {
+                            perfil = "Aluno";
+                            }
+                        } 
+                        <b>@perfil</b>
+                    </td> 
+                    @if (User.IsInRole("administrador"))
+                    {
+                        <td>
+                            <a asp-action="Cadastrar" asp-route-id="@user.Id" class="btn btn-sm btn-success"><i
+                        class="bi-pencil" title="Editar"></i></a>
+                            <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
+                                <i class="bi-trash" title="Excluir"></i></a>
+                        </td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Não há nenhum user cadastrado.</p>
+}

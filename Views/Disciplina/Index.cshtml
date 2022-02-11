@@ -1,0 +1,281 @@
+@model DInnerViewModel
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    DisciplinaModel DisRel = ViewBag.DisciplinaId;
+    IEnumerable<Publicacao> PUB = ViewBag.Publicacoes;
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    var turma = _context.Turmas.FirstOrDefault(x => x.TurmaId == DisRel.TurmaId);
+
+    var publicador = new UserModel();
+    var comentador = new UserModel();
+    IEnumerable<Comentario> comentarioPub;
+    var RowsTxt = 0;
+
+    var bgTop = conf.DCPBannerStyle;
+
+}
+
+<ul class="nav nav-tabs justify-content-center position-absolute align-content-center link-info">
+    <li class="nav-item">
+        <a class="nav-link bg-white bg-opacity-10" asp-route-id="@DisRel.DisciplinaId" asp-action="Index">Principal</a>
+    </li>
+@*     <li class="nav-item">
+        <a class="nav-link">Trabalhos</a>
+    </li> *@
+    <li class="nav-item">
+        <a asp-action="Utilizadores" asp-route-disciplinaId="@DisRel.DisciplinaId" 
+        asp-route-bg="@bgTop" class="nav-link">Inscritos</a>
+    </li>
+</ul>
+
+<div class="w-100 h-25 border-3 p-5 mt-4 rounded-top text-center" style="@bgTop">
+    <h3 class="pt-5 pb-3 text-white "><b>@DisRel.Nome</b></h3>
+</div>
+
+<partial name="_MensagemPartial"></partial>
+
+<div class="container mt-3 ">
+    <div class="row">
+        
+        <div class="col-3">
+            <div class="card @conf.DCPBoxColor @conf.DCPBoxText">
+                <div class="card-header pt-3 @conf.DCPBoxColor">
+                    <div class="float-start">
+                        <h5 class="@conf.TitleText namePub">Sobre</h5></div>
+                    <div class="float-end ">
+                    
+                    </div>
+                </div>
+                <div class="card-body">
+                    
+                    <p class="card-text" title="Descrição da Disciplina">@DisRel.Descricao</p>
+                </div>
+            </div>
+            <a asp-controller="Turma" asp-action="Index" asp-route-id="@DisRel.TurmaId" class="@conf.BTNin mt-2 link-white">
+                Voltar à @turma.NomeCurso
+            </a>
+        </div>
+        
+        <div class="col row">
+            <div class="card pt-3 mt-0 bm-0 pb-3 p-3 @conf.DCPBoxColor">
+                <form asp-action="Publicar" asp-route-type="1">
+                    <div class="col-10 float-start">
+                        <input type="hidden" asp-for="@Model.PublicacaoId">
+
+                        <textarea asp-for="@Model.PublicacaoTexto" class="form-control @conf.DCPBoxColor border-0 border-1" placeholder="Nova publicação"
+                        style="resize: none;">
+                        </textarea>
+                        <span asp-validation-for="@Model.PublicacaoTexto" class="text-danger"></span>
+
+                        <div class="form-group col-3 visually-hidden">
+                            <label asp-for="@Model.UserId">Publicador Id</label><br>
+                            <input asp-for="@Model.UserId" value="@usuarioLog.Id" class="form-control col-lg-">
+                            <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+                        
+                            <label asp-for="@Model.DisciplinaId">DisciplinaId Id</label><br>
+                            <input asp-for="@Model.DisciplinaId" value="@DisRel.DisciplinaId" class="form-control col-lg-">
+                            <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span><br>
+                        </div>
+                    </div>
+                    <div class="col mt-0">
+                        <button class="@conf.BTNin mb-0 mt-2 m-4" style="" type="submit">Enviar</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="w-100"></div>
+            <hr class="mt-3 text-black">
+            <div class="w-100"></div>
+            <div class="mt-1">
+
+        @if (PUB.Count() > 0)
+        {
+            @foreach (var publicacao in PUB)
+            { 
+                publicador = _context.Users.FirstOrDefault(x => x.Id == publicacao.UserId);
+                comentarioPub = _context.Comentarios.Where(c => c.PublicacaoId == publicacao.PublicacaoId).OrderByDescending(x => x.DataComentario);
+                
+                <div class="card @conf.DCPBoxColor @conf.DCPBoxText mb-3">
+                    
+                    <div class=" mt-0 mb-1 m-3 pt-3 pb-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="42" height="43" fill="currentColor" 
+                            class="bi bi-person-circle float-start mt-0 mb-0 m-2" viewBox="0 0 16 16">
+                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                        </svg>
+                        <div class="float-start">
+
+                            <h5 class="text-black namePub">@publicador.NomeCompleto</h5>
+                            <h6 class="text-secondary time">@publicacao.DataPublicacao.ToLongDateString()</h6>
+                        </div>
+                        <div class="float-end ">
+                            @if(usuarioLog.Id == publicacao.UserId){
+                            <a asp-action="Publicar" asp-route-id="@publicacao.PublicacaoId" asp-route-type="1" 
+                                class="editar link-secondary" title="Editar Publicação" >
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a asp-action="Excluir" asp-route-type="1" asp-route-id="@publicacao.PublicacaoId" 
+                                class="apagar link-danger" title="Excluir Publicação">
+                                <i class="bi bi-trash" style="margin-right: 0; margin-left: 0.5vw;"></i>
+                            </a>
+                            }
+                        </div>
+                    </div>
+
+                    @* <hr class="mb-0 mt-0"> *@
+
+                    @{
+                        RowsTxt = @publicacao.Texto.NRows();
+                    }
+                    <textarea id="post" rows="@RowsTxt" aria-disabled="true" disabled aria-controls="false" 
+                    class="@conf.DCPBoxColor card-text m-4 mb-3 mt-3 text-black texto border-0">@publicacao.Texto</textarea>
+                    @* <hr class="mb-0 mt-0"> *@
+                    
+                    <div class="card-body mt-0">
+
+                        <div class="container p-2">
+                            
+                            <form asp-action="Publicar" asp-route-type="2">
+                                 <div class="row">
+                                    <input type="hidden" asp-for="@Model.ComentarioId">
+                                        
+                                    <div class="form-group col-3 visually-hidden">
+                                        <label asp-for="@Model.UserId">Comentador Id</label><br>
+                                        <input asp-for="@Model.UserId" value="@usuarioLog.Id" class="form-control col-lg-">
+                                        <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+                                        
+                                        <label asp-for="@Model.PublicacaoId">Comentador Id</label><br>
+                                        <input asp-for="@Model.PublicacaoId" value="@publicacao.PublicacaoId" class="form-control col-lg-">
+                                        <span asp-validation-for="@Model.PublicacaoId" class="text-danger"></span><br>
+
+                                        <label asp-for="@Model.DisciplinaId">DisciplinaId Id</label><br>
+                                        <input asp-for="@Model.DisciplinaId" value="@DisRel.DisciplinaId" class="form-control col-lg-">
+                                        <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span><br>
+                                    </div>
+
+                                    <div class="input-group mb-2 mr-sm-2">
+                                        <input asp-for="@Model.ComentarioTexto" class="form-control border col m-0" placeholder="Deixe o seu comentario">
+                                        <span asp-validation-for="@Model.ComentarioTexto" class="text-danger"></span>
+                                        <div class="input-group-prepend ">
+                                            <div class="input-group-text bg-transparent border-0">
+                                                <button class="rounded-circle float-end bg-primary text-white m-0 btcom border-1" type="submit">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" 
+                                                    class="bi bi-send-fill" viewBox="0 0 16 16">
+                                                    <path d="M15.964.686a.5.5 0 0 0-.65-.65L.767 5.855H.766l-.452.18a.5.5 0 0 0-.082.887l.41.26.001.002 
+                                                    4.995 3.178 3.178 4.995.002.002.26.41a.5.5 0 0 0 .886-.083l6-15Zm-1.833 1.89L6.637 10.07l-.215-.338a.5.5 
+                                                    0 0 0-.154-.154l-.338-.215 7.494-7.494 1.178-.471-.47 1.178Z"/>
+                                                </svg>
+                                            </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        </div>
+
+                        @if (comentarioPub.Count() > 0)
+                        {   
+
+                            @foreach (var com in comentarioPub)
+                            { 
+                                comentador = _context.Users.FirstOrDefault(x => x.Id == com.UserId);
+
+                                <div class="card mt-1 mb-0 m-2 bg-secondary bg-opacity-10 p-3 pt-2 pb-0" style="border-radius:130px">
+
+                                    <div>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="23" fill="currentColor" 
+                                            class="bi bi-person-circle float-start mt-0 mb-0 m-2" viewBox="0 0 16 16">
+                                            <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+                                            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
+                                        </svg>
+                                        
+                                        <div class="float-start">
+                                            <h6 class="text-black m-1 mt-0 mb-0">@comentador.NomeCompleto</h6>
+                                        </div>
+                                        
+                                        @if(usuarioLog.Id == com.UserId)
+                                        {
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" onclick="mostrarBTNcom()"
+                                            fill="currentColor" class="bi bi-caret-left-fill float-end m-0 mt-0 mb-0" viewBox="0 0 16 16">
+                                                <path d="m3.86 8.753 5.482 4.796c.646.566 1.658.106 1.658-.753V3.204a1 1 0 0 0-1.659-.753l-5.48 4.796a1 1 0 0 0 0 1.506z"/>
+                                            </svg>
+                                        }
+                                        <div class="float-end m-1 mt-0 mb-0">
+                                            @if(usuarioLog.Id == com.UserId)
+                                            {
+                                                <a asp-action="Publicar" asp-route-id="@com.ComentarioId" asp-route-type="2" 
+                                                    class="EdCom link-secondary" title="Editar Comentário" >
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <a asp-action="Excluir" asp-route-id="@com.ComentarioId" asp-route-type="2"
+                                                    class="EdCom link-danger" title="Excluir Comentário">
+                                                    <i class="bi bi-trash" style="margin-right: 0; margin-left: 0.5vw;"></i>
+                                                </a>
+                                            }
+                                            <h6 class="text-secondary DtCom" id="TMC">@com.DataComentario.ToShortDateString()</h6>
+                                        </div>
+                                    </div>
+                                    <p class="textoc mb-2 m-4 mt-0">@com.Texto</p>
+                                </div>
+                                }
+                            }                        
+                        </div>
+                    </div>                  
+                    }
+                } 
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .namePub{
+        font-size: 110%;
+    }
+
+    .time{
+        font-size: 80%;
+        margin-top: 0px;
+        opacity: 0.5;
+    }
+
+    .btcom:hover{
+        background-color: #CCC;
+        box-shadow: 2px 1px 1px #DDD;
+        color: white;
+    }
+
+    .texto{
+        font-size: 110%;
+        resize: none;
+    }
+</style> 
+<script>
+$(document).ready( function(){
+	$(".EdCom").hide();
+	
+})
+
+function resetBTNcom(){
+    $(".EdCom").hide();
+    $(".DtCom").show();
+}
+
+function mostrarBTNcom(){
+    var i = 0;
+
+    $(".DtCom").hide();
+    $(".EdCom").show();
+
+    const myTimeout = setTimeout(resetBTNcom, 5000);
+
+    function myStopFunction() {
+        clearTimeout(myTimeout);
+    }
+           
+}
+</script>

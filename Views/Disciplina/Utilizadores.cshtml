@@ -1,0 +1,130 @@
+@model IEnumerable<UserModel>
+@inject UserManager<UserModel> _userManager
+@inject ClassHomedbContext _context
+@{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+    DisciplinaModel disciplina = ViewBag.Disciplina;
+    ViewBag.Subtitulo = "Inscritos na disciplina de " + disciplina.Nome;
+
+    IEnumerable<UserModel> Proffs = ViewBag.Professores;
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+
+    var bgTop = (string)ViewBag.BG;
+    var list = "col mt-0 mb-0 card pt-2 pb-1 m-1 ";
+
+}
+
+
+
+
+<ul class="nav nav-tabs justify-content-center position-absolute align-content-center link-info">
+    <li class="nav-item">
+        <a class="nav-link" asp-route-id="@disciplina.DisciplinaId" asp-action="Index">Principal</a>
+    </li>
+@*     <li class="nav-item">
+        <a class="nav-link">Trabalhos</a>
+    </li> *@
+    <li class="nav-item">
+        <a asp-action="Utilizadores" asp-route-disciplinaId="@disciplina.DisciplinaId"
+            class="nav-link bg-white bg-opacity-10">Inscritos</a>
+    </li>
+</ul>
+
+<div class="bg-black  w-100 h-25 mt-4 border-3 p-5 rounded-top text-center" style="@bgTop">
+    <h3 class="pt-5 pb-3 text-white"><b>@ViewBag.Subtitulo</b></h3>
+</div>
+
+
+<header class="d-flex justify-content-between align-items-center mt-4">
+
+</header>
+<hr>
+
+<partial name="_MensagemPartial" />
+<div class="p-3 row align-items-start">
+    <div class="col">
+        <div class="@list @conf.DCPBoxColor @conf.DCPBoxText row p-1">
+            <div class="row">
+                <h4 class="col-5">Professores</h4>
+            </div>
+            @if (Proffs.Count() > 0)
+            {
+                <table class=" @conf.Tabela">
+                    <thead>
+                        <tr>
+                            <th class="@conf.DCPBoxText">Nome </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Proffs)
+                        {
+                            var utilizador = Proffs.FirstOrDefault(u => u.Id == user.Id);
+                            var role = _userManager.GetRolesAsync(utilizador).Result;
+                            <tr>
+                                <td><a class="text-decoration-none @conf.DCPBoxText" asp-controller="User" asp-action="perfil"
+                                asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
+                                <td>
+                                    @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
+                                    {
+                                        @if (user.Id != usuarioLog.Id)
+                                        {
+                                            <a asp-action="RemProff" asp-route-idProff="@user.Id" asp-route-idDis="@disciplina.DisciplinaId"
+                                class="btn btn-sm btn-danger">
+                                                <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <a asp-controller="Turma" asp-action="Index" asp-route-id="@disciplina.TurmaId"
+            class="@conf.BTNin mt-2 m-1 link-white">
+            Voltar à Turmas
+        </a>
+    </div>
+    <div class="@list @conf.DCPBoxText @conf.DCPBoxColor">
+        <div class="row">
+            <h4 class="col-3">Alunos</h4>
+        </div>
+        @if (Model.Count() > 0)
+        {
+            <table class="@conf.Tabela">
+                <thead>
+                    <tr>
+                        <th class="@conf.DCPBoxText">Nome </th>
+
+                        <th></th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var USE in Model)
+                    {
+                        <tr>
+                            <td><a class="text-decoration-none @conf.DCPBoxText" asp-controller="User" asp-action="perfil"
+                            asp-route-id="@USE.Id"><b>@USE.NomeCompleto</b></a></td>
+
+                            <td>
+                                @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
+                                {
+                                    <a asp-action="RemAluno" asp-route-idAluno="@USE.Id" asp-route-idDis="@disciplina.DisciplinaId"
+                            class="btn btn-sm btn-danger">
+                                        <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                }
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>Não há nenhum aluno inscrito nesta disciplina.</p>
+        }
+    </div>
+</div>

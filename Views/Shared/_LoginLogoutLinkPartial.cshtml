@@ -1,0 +1,16 @@
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+    
+}
+    @if (Context.User.Identity.IsAuthenticated)
+    {
+        var user = await _userManager.GetUserAsync(Context.User);
+        <a asp-controller="User" asp-action="perfil" asp-route-id="@user.Id" class="nav-link @conf.TitleText">@user.NomeCompleto.PrimeiraPalavra().ToUpper()</a>
+        <a class="nav-link pe-0 @conf.TitleText botaoLog text-decoration-none " asp-controller="User" asp-action="Logout">Sair</a>
+    }
+    else
+    {
+        <a class="text-decoration-none pe-0 botaoLog col float-start mt-1 @conf.TitleText" asp-controller="User" asp-action="Login">Entrar</a>
+    }

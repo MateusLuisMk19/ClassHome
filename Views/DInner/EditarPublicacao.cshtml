@@ -1,0 +1,35 @@
+@model DInnerViewModel
+@inject ClassHomedbContext _context
+@inject UserManager<UserModel> _userManager
+@{
+    DisciplinaModel DisRel = ViewBag.DisciplinaId;
+    IEnumerable<Publicacao> PUB = ViewBag.Publicacoes;
+
+    var usuarioLog = await _userManager.GetUserAsync(Context.User);
+    
+}
+
+<h1 class="text-light">@ViewBag.Subtitulo</h1>
+<hr>
+<form asp-action="Publicar" asp-route-id="@Model.PublicacaoId" asp-route-type="1">
+    <div class="col">
+        <input type="hidden" asp-for="@Model.PublicacaoId">
+
+        <textarea asp-for="@Model.PublicacaoTexto" class="form-control" placeholder="Escrver uma nova publicação"></textarea>
+        <span asp-validation-for="@Model.PublicacaoTexto" class="text-danger"></span>
+
+        <div class="form-group col-3 visually-hidden">
+            <label asp-for="@Model.UserId">Publicador Id</label><br>
+            <input asp-for="@Model.UserId" class="form-control col-lg-">
+            <span asp-validation-for="@Model.UserId" class="text-danger"></span><br>
+
+            <label asp-for="@Model.DisciplinaId">DisciplinaId Id</label><br>
+            <input asp-for="@Model.DisciplinaId" class="form-control col-lg-">
+            <span asp-validation-for="@Model.DisciplinaId" class="text-danger"></span><br>
+        </div>
+    </div>
+    <div class="col mt-2 float-end">
+        <a class="btn btn-outline-white" asp-action="Index" asp-route-id="@DisRel.DisciplinaId" style="border-radius: 20%;">Voltar</a>
+        <button class="btn btn-outline-dark" style="border-radius: 20%;" type="submit">Enviar</button>
+    </div>
+</form>
