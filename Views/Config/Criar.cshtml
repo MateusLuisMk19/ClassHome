@@ -1,0 +1,109 @@
+@inject ClassHomedbContext _context
+@model Config
+@{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
+}
+
+<header class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <div>
+        <h4>@ViewBag.Subtitulo</h4>
+    </div>
+</header>
+
+<form asp-action="Criar" class="row">
+    <input type="hidden" asp-for="@Model.Id">
+    <div class="form-group col-4">
+     
+        <label asp-for="@Model.Nome" class="mt-2 @conf.TitleText">Nome</label><br>
+        <input asp-for="@Model.Nome" class="form-control">
+        <span asp-validation-for="@Model.Nome" class="text-danger"></span>
+
+        <label asp-for="@Model.Menu" class="mt-2 @conf.TitleText">Menu Cor</label><br>
+        <input asp-for="@Model.Menu" class="form-control">
+        <span asp-validation-for="@Model.Menu" class="text-danger"></span>
+
+        <label asp-for="@Model.Fundo" class="mt-2 @conf.TitleText">Fundo class</label><br>
+        <input asp-for="@Model.Fundo" class="form-control">
+        <span asp-validation-for="@Model.Fundo" class="text-danger"></span>
+
+        <label asp-for="@Model.Texto" class="mt-2 @conf.TitleText">Texto Class</label><br>
+        <input asp-for="@Model.Texto" class="form-control">
+        <span asp-validation-for="@Model.Texto" class="text-danger"></span>
+
+        <label asp-for="@Model.TitleText" class="mt-2 @conf.TitleText">Titulo Text Cor</label><br>
+        <input asp-for="@Model.TitleText" class="form-control">
+        <span asp-validation-for="@Model.TitleText" class="text-danger"></span>
+
+        <label asp-for="@Model.Link" class="mt-2 @conf.TitleText">Link Text</label><br>
+        <input asp-for="@Model.Link" class="form-control">
+        <span asp-validation-for="@Model.Link" class="text-danger"></span>
+
+    </div>
+    <div class="form-group col-5">
+
+        <label asp-for="@Model.CardCab" class="mt-2 @conf.TitleText">CardCab class</label><br>
+        <input asp-for="@Model.CardCab" class="form-control">
+        <span asp-validation-for="@Model.CardCab" class="text-danger"></span>
+
+        <label asp-for="@Model.CardStyle" class="mt-2 @conf.TitleText">Estilo do card</label><br>
+        <textarea asp-for="@Model.CardStyle" class="form-control"></textarea>
+        <span asp-validation-for="@Model.CardStyle" class="text-danger"></span>
+
+        <label asp-for="@Model.CardStyleCab" class="mt-2 @conf.TitleText">Estilo do card cabeçalho</label><br>
+        <textarea asp-for="@Model.CardStyleCab" class="form-control"></textarea>
+        <span asp-validation-for="@Model.CardStyleCab" class="text-danger"></span>
+
+        <label asp-for="@Model.DCPBannerStyle" class="mt-2 @conf.TitleText">Banner DCP Style</label><br>
+        <textarea asp-for="@Model.DCPBannerStyle" class="form-control"></textarea>
+        <span asp-validation-for="@Model.DCPBannerStyle" class="text-danger"></span>
+
+    </div>
+    <div class="form-group col-3">
+            
+        <label asp-for="@Model.TabelaText" class="mt-2 @conf.TitleText">TabelaText cor</label><br>
+        <input asp-for="@Model.TabelaText" class="form-control">
+        <span asp-validation-for="@Model.TabelaText" class="text-danger"></span>
+
+        <label asp-for="@Model.Tabela" class="mt-2 @conf.TitleText">Tabela Class</label><br>
+        <input asp-for="@Model.Tabela" class="form-control">
+        <span asp-validation-for="@Model.Tabela" class="text-danger"></span>
+
+        <label asp-for="@Model.DCPBoxColor" class="mt-2 @conf.TitleText">Box DCP Cor class</label><br>
+        <input asp-for="@Model.DCPBoxColor" class="form-control">
+        <span asp-validation-for="@Model.DCPBoxColor" class="text-danger"></span>
+
+        <label asp-for="@Model.DCPBoxText" class="mt-2 @conf.TitleText">Box Texto DCP class</label><br>
+        <input asp-for="@Model.DCPBoxText" class="form-control">
+        <span asp-validation-for="@Model.DCPBoxText" class="text-danger"></span>
+        
+        <label asp-for="@Model.BTNin" class="mt-2 @conf.TitleText">BTNin Class</label><br>
+        <input asp-for="@Model.BTNin" class="form-control">
+        <span asp-validation-for="@Model.BTNin" class="text-danger"></span> 
+
+        <label asp-for="@Model.BTNoff" class="mt-2 @conf.TitleText">BTNoff Class</label><br>
+        <input asp-for="@Model.BTNoff" class="form-control">
+        <span asp-validation-for="@Model.BTNoff" class="text-danger"></span>
+
+        @* <label asp-for="@Model.BTNin" class="mt-2 @conf.TitleText">BTNin Class</label><br>
+        <input asp-for="@Model.BTNin" class="form-control">
+        <span asp-validation-for="@Model.BTNin" class="text-danger"></span> 
+
+        <label asp-for="@Model.BTNoff" class="mt-2 @conf.TitleText">BTNoff Class</label><br>
+        <input asp-for="@Model.BTNoff" class="form-control">
+        <span asp-validation-for="@Model.BTNoff" class="text-danger"></span>
+
+        <label asp-for="@Model.Menu" class="mt-2 @conf.TitleText">Menu Cor</label><br>
+        <input asp-for="@Model.Menu" class="form-control">
+        <span asp-validation-for="@Model.Menu" class="text-danger"></span>
+
+        <label asp-for="@Model.Tabela" class="mt-2 @conf.TitleText">Tabela Class</label><br>
+        <input asp-for="@Model.Tabela" class="form-control">
+        <span asp-validation-for="@Model.Tabela" class="text-danger"></span> *@
+
+    </div>
+    <div class="mt-3">
+        <a asp-action="Config" class="@conf.BTNoff">Cancelar</a>
+        <button class="@conf.BTNin" type="submit">Salvar</button>
+    </div>
+</form>

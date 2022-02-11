@@ -1,7 +1,8 @@
 @model DisciplinaModel
-
 @inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     TurmaModel TurmaRel = ViewBag.TurmaId;
     int idT;
     if (Context.Request.RouteValues.ContainsKey("id"))
@@ -18,8 +19,11 @@
 
 }
 
-<h1 class="text-light">@ViewBag.Subtitulo</h1>
-<hr>
+<header class="d-flex justify-content-between align-items-center mt-4 mb-3">
+    <div>
+        <h4>@ViewBag.Subtitulo</h4>
+    </div>
+</header>
 
 <form asp-action="Criar" class="row">
     <input type="hidden" asp-for="@Model.DisciplinaId">
@@ -39,8 +43,8 @@
             <span asp-validation-for="@Model.TurmaId" class="text-danger"></span><br>
         </div>
         <div class="mt-3">
-            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-            <button class="btn btn-primary" type="submit">Salvar</button>
+            <a asp-action="Index" class="@conf.BTNoff">Cancelar</a>
+            <button class="@conf.BTNin" type="submit">Salvar</button>
         </div>
     </div>
 </form>

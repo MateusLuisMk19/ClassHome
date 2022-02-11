@@ -4,7 +4,7 @@ namespace ClassHome.ViewModels
 {
     public class LoginViewModel
     {
-        [Display(Name = "Usuário")]
+        [Display(Name = "Utilizador")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "O campo {0} é de preenchimento obrigatório.")]
         public string User { get; set; }

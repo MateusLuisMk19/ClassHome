@@ -18,4 +18,5 @@ th{
 .nomeDT:hover{
     font-size: 32px;
     border: blanchedalmond;
+    box-shadow: 3Px ;
 }

@@ -1,37 +1,36 @@
 @model IEnumerable<UserModel>
 @inject UserManager<UserModel> _userManager
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
     TurmaModel turma = ViewBag.Turma;
     ViewBag.Subtitulo = "Utilizadores em " + turma.NomeCurso;
 
     IEnumerable<UserModel> Proffs = ViewBag.Professores;
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
 
+    var nameCl ="text-decoration-none text-primary";
 }
 <header class="d-flex justify-content-between align-items-center mt-4">
     <div>
-        <h2 class="text-primary">@ViewBag.Subtitulo</h2>
+        <h4>@ViewBag.Subtitulo</h4>
     </div>
     <div>
-        @if (User.IsInRole("Professor"))
-        {
-            <a asp-action="AddAluno" asp-route-turmaId="@turma.TurmaId" class="btn btn-primary">Adicionar Aluno</a>
-        }
+        
     </div>
 </header>
-<hr>
 
 <partial name="_MensagemPartial" />
 <div class="p-4">
     <div>
-        <h2>Professores</h2>
+        <h5>Professores</h5>
         @if (Proffs.Count() > 0)
         {
-            <table class="table table-striped tabela">
+            <table class="@conf.Tabela">
                 <thead>
                     <tr>
-                        <th>Nome </th>
-                        <th>Email</th>
+                        <th class="text-secondary">Nome </th>
+                        <th class="text-secondary">Email</th>
                         @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
                         {
                             <th></th>
@@ -45,7 +44,7 @@
                         var role = _userManager.GetRolesAsync(utilizador).Result;
 
                         <tr>
-                            <td><a class="text-decoration-none" asp-action="perfil"
+                            <td><a class="@nameCl"  asp-controller="User" asp-action="perfil"
                             asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
                             <td>@user.Email</td>
 
@@ -66,14 +65,16 @@
         }
     </div>
     <div>
-        <h2>Alunos</h2>
+        <h5>Alunos</h5>
         @if (Model.Count() > 0)
         {
-            <table class="table table-striped tabela">
+            <table class="@conf.Tabela">
                 <thead>
                     <tr>
-                        <th>Nome </th>
-                        <th>Email</th>
+                        <th class="text-secondary">Nome </th>
+                        <th class="text-secondary">Idade</th>
+                        <th class="text-secondary">Email</th>
+                        
                         @if (User.IsInRole("Professor"))
                         {
                             <th></th>
@@ -84,9 +85,11 @@
                     @foreach (var USE in Model)
                     {
                         <tr>
-                            <td><a class="text-decoration-none" asp-action="perfil"
+                            <td><a class="@nameCl"  asp-controller="User" asp-action="perfil"
                             asp-route-id="@USE.Id"><b>@USE.NomeCompleto</b></a></td>
+                            <td>@USE.Idade</td>
                             <td>@USE.Email</td>
+                            
 
                             @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
                             {
@@ -107,6 +110,6 @@
     </div>
 </div>
 
-<a asp-action="Index" asp-route-id="@turma.TurmaId" class="p-3   btn btn-primary float-end rounded-circle text-decoration-none link-white">
+<a asp-action="Index" asp-route-id="@turma.TurmaId" class="p-3   @conf.BTNin float-end rounded-circle text-decoration-none link-white">
     <i class="bi bi-arrow-left"></i>Voltar
 </a>

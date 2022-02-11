@@ -1,7 +1,9 @@
 @model DInnerViewModel
-@inject ClassHomedbContext _context
 @inject UserManager<UserModel> _userManager
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     DisciplinaModel DisRel = ViewBag.DisciplinaId;
     IEnumerable<Publicacao> PUB = ViewBag.Publicacoes;
 
@@ -35,9 +37,9 @@
         <span asp-validation-for="@Model.ComentarioTexto" class="text-danger"></span>
 
         <div class="col mt-2 float-end">
-            <a class="btn btn-outline-white" asp-action="Index" asp-route-id="@DisRel.DisciplinaId"
-                style="border-radius: 20%;">Voltar</a>
-            <button class="float-end m-0 border-1" type="submit">Enviar</button>
+            <a class="@conf.BTNoff" asp-action="Index" asp-route-id="@DisRel.DisciplinaId"
+                style="border-radius: 20%;">Cancelas</a>
+            <button class="float-end m-0 border-1 @conf.BTNin" type="submit">Enviar</button>
         </div>
     </div>
 </form>

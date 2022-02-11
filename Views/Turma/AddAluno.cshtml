@@ -1,14 +1,16 @@
 @model MatriculaModel
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     TurmaModel turma = ViewBag.Turma;
-    ViewBag.Subtitulo = "Add Aluno à " + turma.NomeCurso;
+    ViewBag.Subtitulo = "Adicionar Aluno à " + turma.NomeCurso;
 
     var discRel = ViewBag.DisciplinaId;
 
 }
 
-<h1 class="text-light">@ViewBag.Subtitulo</h1>
-<hr>
+<h4 class="@conf.TitleText mt-4">@ViewBag.Subtitulo</h4>
 
 <partial name="_MensagemPartial"></partial>
 
@@ -36,7 +38,7 @@
         </div>
     </div>
     <div class="mt-3">
-        <a asp-action="Index" asp-route-id="@turma.TurmaId" class="btn btn-outline-dark">Cancelar</a>
-        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a asp-action="Index" asp-route-id="@turma.TurmaId" class="@conf.BTNoff">Cancelar</a>
+        <button class="@conf.BTNin" type="submit">Salvar</button>
     </div>
 </form>

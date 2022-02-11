@@ -1,5 +1,8 @@
 @model ProfessorDisciplinaModel
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     ViewBag.Subtitulo = "Add Professor à Disciplina";
 
     var discRel = ViewBag.DisciplinaId;
@@ -22,7 +25,7 @@
     <p class="mt-3">Nota: Se o professor ainda não estiver associado a esta turma, não aparecerá na lista.</p>
 
     <div class="mt-3">
-        <a asp-action="Index" asp-route-id="@discRel.TurmaId" class="btn btn-outline-dark">Cancelar</a>
-        <button class="btn btn-primary" type="submit">Salvar</button>
+        <a asp-action="Index" asp-route-id="@discRel.TurmaId" class="@conf.BTNoff">Cancelar</a>
+        <button class="@conf.BTNin" type="submit">Salvar</button>
     </div>
 </form>

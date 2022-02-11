@@ -140,27 +140,6 @@ namespace ClassHome.Controllers
                     {
                         var role = userBD.TUsers;
 
-                        if(role == "Aluno")
-                        {
-                            var aluno = new AlunoModel(){
-                                UserId = userBD.Id,
-                                User = _context.Useres.FirstOrDefault(x=> x.Id == userBD.Id)
-                            };
-                            _context.Alunos.Add(aluno);
-                            _context.SaveChanges();
-                            var res = await _userManager.UpdateAsync(userBD);
-                        }
-                        /* 
-                        else if(role == "Professor")
-                        {
-                            var professor = new ProfessorModel(){
-                                UserId = userBD.Id,
-                            };
-                            _context.Professores.Add(professor);
-                            _context.SaveChanges();
-                            var res = await _userManager.UpdateAsync(userBD);
-                        } */
-
                         var result = await _userManager.AddToRoleAsync(userBD, role);
                         if (result.Succeeded)
                         {
@@ -200,6 +179,7 @@ namespace ClassHome.Controllers
                 var resultado = await _signInManager.PasswordSignInAsync(login.User, login.Senha, login.Lembrar, false);
                 if (resultado.Succeeded)
                 {
+                    
                     login.ReturnUrl = login.ReturnUrl ?? "~/";
                     return LocalRedirect(login.ReturnUrl);
                 }
@@ -289,76 +269,6 @@ namespace ClassHome.Controllers
             return View(model: returnUrl);
         }
 
-/*         [Authorize(Roles = "administrador")]
-        public async Task<IActionResult> AddProfessor(int id)
-        {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null)
-            {
-                var proff = new UserModel()
-                {
-                    NomeCompleto = user.NomeCompleto,
-                    Email = user.Email,
-                    DataNascimento = user.DataNascimento,
-                    NormalizedEmail = user.NormalizedEmail,
-                    PasswordHash = user.PasswordHash,
-                    PhoneNumber = user.PhoneNumber,
-                    UserName = user.UserName,
-                };
-
-
-                var resultado = await _userManager.AddToRoleAsync(user, "Professor");
-                if (resultado.Succeeded)
-                {
-                    var result = await _userManager.RemoveFromRoleAsync(user, "user");
-
-                    this.MostrarMensagem(
-                        $"<b>{user.NomeCompleto}</b> agora é um Coordenador.");
-                }
-                else
-                {
-                    this.MostrarMensagem(
-                        $"Não foi possível remover <b>{user.UserName}</b> de Coordenador.", true);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                this.MostrarMensagem("Perfil não encontrado.", true);
-                return RedirectToAction(nameof(Index));
-            }
-        }
-
-        [Authorize(Roles = "administrador")]
-        public async Task<IActionResult> RemCoordenador(int id)
-        {
-            var user = await _userManager.FindByIdAsync(id.ToString());
-            if (user != null)
-            {
-                var resultado = await _userManager.RemoveFromRoleAsync(user, "coordenador");
-                if (resultado.Succeeded)
-                {
-                    var result = await _userManager.AddToRoleAsync(user, "user");
-                    if (result.Succeeded)
-                    {
-                        this.MostrarMensagem(
-                    $"<b>{user.NomeCompleto}</b> agora é um User.");
-                    }
-                }
-                else
-                {
-                    this.MostrarMensagem(
-                        $"Não foi possível remover <b>{user.UserName}</b> de Coordenador.", true);
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            else
-            {
-                this.MostrarMensagem("Perfil não encontrado.", true);
-                return RedirectToAction(nameof(Index));
-            }
-        }
- */
         public async Task<IActionResult> Perfil(int id)
         {
             var utilizador = await _context.Useres.FindAsync(id);

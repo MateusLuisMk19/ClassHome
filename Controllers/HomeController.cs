@@ -19,11 +19,14 @@ namespace ClassHome.Controllers
         {
             this._context = context;
         }
+
         [Authorize]
         public async Task<IActionResult> Index()
         {
             var ProffInTurma = _context.TurmaUser.OrderBy(x => x.UserId).AsNoTracking();
+            var alunoInTurma = _context.Matriculas.OrderBy(x => x.AlunoId).AsNoTracking();
 
+            ViewBag.AlunoInTurma = alunoInTurma;
             ViewBag.ProffInTurma = ProffInTurma;
 
             return View(await _context.Turmas.OrderBy(x => x.NomeCurso).AsNoTracking().ToListAsync());

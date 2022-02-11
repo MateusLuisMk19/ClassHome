@@ -1,15 +1,14 @@
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+    //var conf = _context.Configs.FirstOrDefault(x => x.Id == 1);
+
     var controllerAtual = ViewContext.RouteData.Values["controller"].ToString();
     var actionAtual = ViewContext.RouteData.Values["action"].ToString();
 
     var menuInicial = controllerAtual == "Home" ? "active" : "";
     var menuDisciplina = controllerAtual == "Disciplina" ? "active" : "";
     var menuTurma = controllerAtual == "Turma" ? "active" : "";
-
-    @* var opRequisicao = (actionAtual == "Index" && controllerAtual == "Requisicao") ? "active" : "";
-        var opRequisicaoPend = (actionAtual == "Pedido" && controllerAtual == "Requisicao") ? "active" : "";
-        var menuUser = controllerAtual == "User" ? (actionAtual == "AcessoRestrito" ? "" : "active") : "";
-    *@
 
 }
 
@@ -20,47 +19,44 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/lib/bootstrap5/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/lib/bootstrap5/dist/css/darkly.min.css">
     <link rel="stylesheet" href="/lib/bootstrap-icons/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/style.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <title>ClassHome : @ViewBag.Subtitulo</title>
 </head>
 
-<body style="padding-bottom: 80px" class="mb-3 bg-secondary">
-    <nav class="navbar navbar-expand-sm navbar-light bg-light">
-        <div class="container-fluid pt-0 pb-0 p-5">
-            <a class="navbar-brand" asp-controller="Home" asp-action="Index">ClassHome</a>
+<body style="padding-bottom: 80px; max-width: 70%;" class="container mb-1 @conf.Fundo">
+    <nav class="navbar navbar-expand-sm @conf.Menu" style="border-bottom: 1px solid grey;">
+        <div class="container-fluid pt-0 pb-0">
+            <a class="navbar-brand @conf.TitleText" asp-controller="Home" asp-action="Index">ClassHome</a>
 
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav me-auto">
-                    @if (controllerAtual == "Turma")
+                    @if (controllerAtual == "Turma" || controllerAtual == "Disciplina")
                     {
                         <li class="nav-item col">
-                            <a class="nav-link " asp-controller="Home" asp-action="Index">Turmas</a>
-                        </li>
-                    }
-                    else if (controllerAtual == "Disciplina")
-                    {
-                        <li class="nav-item col">
-                            <a class="nav-link " asp-controller="Home" asp-action="Index">Disciplinas</a>
+                            <a class="nav-link @conf.TitleText" asp-controller="Home" asp-action="Index">Turmas</a>
                         </li>
                     }
                     @if (User.IsInRole("administrador"))
                     {
                         <li class="nav-item col">
-                            <a class="nav-link " asp-controller="User" asp-action="Index">Utilizadores</a>
+                            <a class="nav-link @conf.TitleText" asp-controller="User" asp-action="Index">Utilizadores</a>
                         </li>
                     }
                 </ul>
                 <div class="d-flex">
-                    <partial name="_LoginLogoutLinkPartial" class="p-2 me-sm-2 m-2 " />
+                    <partial name="_LoginLogoutLinkPartial" class="p-2 me-sm-2 m-2" />
+                    <a class="text-decoration-none @conf.Link m-3 mb-0 mt-2"asp-controller="Config" asp-action="Config">
+                        <i class="bi bi-sliders"></i></a>
+
                 </div>
             </div>
         </div>
     </nav>
 
-    <div class="container mt-2 text-dark">
+    <div class="container mt-0 @conf.Texto">
         @RenderBody()
     </div>
 

@@ -26,9 +26,6 @@ namespace ClassHome.Models
 
         [Display(Name = "Tipo de Utilizador")]
         public string TUsers { get; set; }
-        
-/*         ICollection<ProfessorModel> Professores { get; set; } */
-        ICollection<AlunoModel> Alunos {get; set; }
 
 
     }

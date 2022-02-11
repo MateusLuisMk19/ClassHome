@@ -1,20 +1,24 @@
 @model IEnumerable<UserModel>
+@inject ClassHomedbContext _context
 @inject UserManager<UserModel> _userManager
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     ViewBag.Subtitulo = "Listagem de Utilizadores";
 @* 
     var thstile = "text-light"; *@
     
     var perfil = ""; 
 }
-<header class="d-flex justify-content-between align-items-center">
+
+<header class="d-flex justify-content-between align-items-center mt-4">
     <div>
-        <h1 class="text-primary">@ViewBag.Subtitulo</h1>
+        <h4>@ViewBag.Subtitulo</h4>
     </div>
     <div>
         @if (User.IsInRole("administrador"))
         {
-            <a asp-action="Cadastrar" class="btn btn-primary">Novo User</a>
+            <a asp-action="Cadastrar" class="@conf.BTNin">Novo User</a>
         }
     </div>
 </header>
@@ -24,14 +28,14 @@
 
 @if (Model.Count() > 0)
 {
-    <table class="table table-striped tabela">
+    <table class="@conf.Tabela">
         <thead>
             <tr>
-                <th  >Nome Completo</th>
-                <th  >Idade</th>
-                <th  >Email</th>
-                <th  >Telefone</th>
-                <th  >Perfil</th>
+                <th class="@conf.TabelaText">Nome Completo</th>
+                <th class="@conf.TabelaText">Idade</th>
+                <th class="@conf.TabelaText">Email</th>
+                <th class="@conf.TabelaText">Telefone</th>
+                <th class="@conf.TabelaText">Perfil</th>
                 @if (User.IsInRole("administrador"))
                 {
                     <th></th>
@@ -45,7 +49,7 @@
                 var role = _userManager.GetRolesAsync(utilizador).Result;
 
                 <tr>
-                    <td><a class="text-decoration-none" asp-action="perfil" asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
+                    <td><a class="text-decoration-none @conf.Texto"  asp-controller="User" asp-action="perfil" asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
                     <td>@user.Idade</td>
                     <td>@user.Email</td>
                     <td>@user.PhoneNumber</td>
@@ -65,7 +69,7 @@
                     @if (User.IsInRole("administrador"))
                     {
                         <td>
-                            <a asp-action="Cadastrar" asp-route-id="@user.Id" class="btn btn-sm btn-secondary"><i
+                            <a asp-action="Cadastrar" asp-route-id="@user.Id" class="btn btn-sm btn-success"><i
                         class="bi-pencil" title="Editar"></i></a>
                             <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
                                 <i class="bi-trash" title="Excluir"></i></a>

@@ -1,11 +1,16 @@
 @model IEnumerable<UserModel>
 @inject UserManager<UserModel> _userManager
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
     DisciplinaModel disciplina = ViewBag.Disciplina;
-    ViewBag.Subtitulo = "Utilizadores na disciplina de " + disciplina.Nome;
+    ViewBag.Subtitulo = "Inscritos na disciplina de " + disciplina.Nome;
 
     IEnumerable<UserModel> Proffs = ViewBag.Professores;
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
+
+    var bgTop = (string)ViewBag.BG;
+    var list = "col mt-0 mb-0 card pt-2 pb-1 m-1 ";
 
 }
 
@@ -16,17 +21,17 @@
     <li class="nav-item">
         <a class="nav-link" asp-route-id="@disciplina.DisciplinaId" asp-action="Index">Principal</a>
     </li>
-    <li class="nav-item">
+@*     <li class="nav-item">
         <a class="nav-link">Trabalhos</a>
-    </li>
+    </li> *@
     <li class="nav-item">
         <a asp-action="Utilizadores" asp-route-disciplinaId="@disciplina.DisciplinaId"
-            class="nav-link active">Utilizadores</a>
+            class="nav-link bg-white bg-opacity-10">Inscritos</a>
     </li>
 </ul>
 
-<div class="bg-black  w-100 h-25 border-3 p-5 rounded-top" style="border-radius: 3%;">
-    <h2 class="pt-5 pb-3">@ViewBag.Subtitulo</h2>
+<div class="bg-black  w-100 h-25 mt-4 border-3 p-5 rounded-top text-center" style="@bgTop">
+    <h3 class="pt-5 pb-3 text-white"><b>@ViewBag.Subtitulo</b></h3>
 </div>
 
 
@@ -36,82 +41,82 @@
 <hr>
 
 <partial name="_MensagemPartial" />
-<div class="p-4 row">
+<div class="p-3 row align-items-start">
     <div class="col">
-        <div class="row">
-            <h2 class="col-5">Professores</h2>
-        </div>
-        @if (Proffs.Count() > 0)
-        {
-            <table class="table table-striped tabela">
-                <thead>
-                    <tr>
-                        <th>Nome </th>
-                        @if (User.IsInRole("Professor") && usuarioLog.Id == disciplina.CriadorId)
-                        {
-                            <th></th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Proffs)
-                    {
-                        var utilizador = Proffs.FirstOrDefault(u => u.Id == user.Id);
-                        var role = _userManager.GetRolesAsync(utilizador).Result;
-
+        <div class="@list @conf.DCPBoxColor @conf.DCPBoxText row p-1">
+            <div class="row">
+                <h4 class="col-5">Professores</h4>
+            </div>
+            @if (Proffs.Count() > 0)
+            {
+                <table class=" @conf.Tabela">
+                    <thead>
                         <tr>
-                            <td><a class="text-decoration-none" asp-action="perfil"
-                            asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
-
-                            @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
-                            {
+                            <th class="@conf.DCPBoxText">Nome </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var user in Proffs)
+                        {
+                            var utilizador = Proffs.FirstOrDefault(u => u.Id == user.Id);
+                            var role = _userManager.GetRolesAsync(utilizador).Result;
+                            <tr>
+                                <td><a class="text-decoration-none @conf.DCPBoxText" asp-controller="User" asp-action="perfil"
+                                asp-route-id="@user.Id"><b>@user.NomeCompleto</b></a></td>
                                 <td>
-                                    @if (user.Id != usuarioLog.Id)
+                                    @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
                                     {
-                                        <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
-                                            <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                        @if (user.Id != usuarioLog.Id)
+                                        {
+                                            <a asp-action="RemProff" asp-route-idProff="@user.Id" asp-route-idDis="@disciplina.DisciplinaId"
+                                class="btn btn-sm btn-danger">
+                                                <i class="bi-x-circle" title="Removar da Turma"></i></a>
+                                        }
                                     }
                                 </td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        <a asp-controller="Turma" asp-action="Index" asp-route-id="@disciplina.TurmaId" class="btn btn-primary mt-2 link-white">
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+        <a asp-controller="Turma" asp-action="Index" asp-route-id="@disciplina.TurmaId"
+            class="@conf.BTNin mt-2 m-1 link-white">
             Voltar à Turmas
         </a>
     </div>
-    <div class="col ">
+    <div class="@list @conf.DCPBoxText @conf.DCPBoxColor">
         <div class="row">
-            <h2 class="col-3">Alunos</h2>
+            <h4 class="col-3">Alunos</h4>
         </div>
         @if (Model.Count() > 0)
         {
-            <table class="table table-striped tabela ">
+            <table class="@conf.Tabela">
                 <thead>
                     <tr>
-                        <th>Nome </th>
-                        @if (User.IsInRole("Professor"))
-                        {
-                            <th></th>
-                        }
+                        <th class="@conf.DCPBoxText">Nome </th>
+
+                        <th></th>
+
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var USE in Model)
                     {
                         <tr>
-                            <td><a class="text-decoration-none" asp-action="perfil"
+                            <td><a class="text-decoration-none @conf.DCPBoxText" asp-controller="User" asp-action="perfil"
                             asp-route-id="@USE.Id"><b>@USE.NomeCompleto</b></a></td>
 
-                            @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
-                            {
-                                <td>
-                                    <a asp-action="Excluir" asp-route-id="@USE.Id" class="btn btn-sm btn-danger">
+                            <td>
+                                @if (User.IsInRole("Professor") && disciplina.CriadorId == usuarioLog.Id)
+                                {
+                                    <a asp-action="RemAluno" asp-route-idAluno="@USE.Id" asp-route-idDis="@disciplina.DisciplinaId"
+                            class="btn btn-sm btn-danger">
                                         <i class="bi-x-circle" title="Removar da Turma"></i></a>
-                                </td>
-                            }
+                                }
+                            </td>
+
                         </tr>
                     }
                 </tbody>
@@ -119,7 +124,7 @@
         }
         else
         {
-            <p>Não há nenhum aluno na turma.</p>
+            <p>Não há nenhum aluno inscrito nesta disciplina.</p>
         }
     </div>
 </div>

@@ -1,10 +1,12 @@
 @model UserModel
-
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     ViewBag.Subtitulo = "Perfil de Utilizador";
 }
 
-<h1 class="text-primary">@ViewBag.Subtitulo</h1>
+<h4 class="mt-5">@ViewBag.Subtitulo</h4>
 <hr>
 
 <div class="row">
@@ -21,9 +23,4 @@
         <p>@Model.Email</p>
         <p>@Model.PhoneNumber</p>
     </div>
-</div>
-
-<div class="mt-3">
-    <a asp-action="Index" class="btn btn-light"><i class="bi-arrow-left">Voltar</i></a>
-    <a class="btn btn-primary" asp-controller="Requisicao" asp-action="Index" asp-route-id="@Model.Id">Requisições</a>
 </div>

@@ -2,9 +2,10 @@
 @inject ClassHomedbContext _context
 @inject UserManager<UserModel> _userManager
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
 
-    var bkg = "card col-3 mb-3 m-5 text-light bg-dark";
-    var btnOp = "bg-opacity-30 bg-secondary p-1 rounded-circle";
+    var bkg = "card col-3 mb-3 m-4 text-light bg-dark";
+    var btnOp = "bg-opacity-30 @conf.Fundo p-1 rounded-circle";
 
     TurmaModel TurmaRel = ViewBag.TurmaId;
 
@@ -12,58 +13,58 @@
 
     var usuarioLog = await _userManager.GetUserAsync(Context.User);
     IEnumerable<ProfessorDisciplinaModel> DCP = ViewBag.ProffInDisciplina;
+    IEnumerable<MatriculaModel> ADCP = ViewBag.AlunoInTurma;
 
 }
 
-<div class="row mt-5">
-    <div class="col-8">
-        <h1 class="text-primary">@ViewBag.Subtitulo</h1>
+<header class="d-flex justify-content-between align-items-center mt-4">
+    <div class="m-4 mt-0 mb-0">
+        <h4 class="@conf.TitleText">@ViewBag.Subtitulo</h4>
     </div>
-    <div class="col">
-        
+    <div>
         @if (User.IsInRole("Professor"))
         {
-            <div class="float-end  m-4">
-                <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" class="w-50 h-50" title="Criar Disciplina">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor"
-                    class="bi bi-plus-circle" viewBox="0 0 16 16">
-                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
-                        <path
-                        d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
-                    </svg>
+            <div class="float-end mt-0 mb-0 m-4">
+                <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" class="@conf.BTNin" title="Criar Disciplina">Nova
+                    Disciplina
                 </a>
             </div>
+
+            <div class="float-end mt-0 mb-0 m-0">
+                <a asp-action="AddAluno" asp-route-turmaId="@TurmaRel.TurmaId" class="@conf.BTNin">Adicionar Aluno</a>
+            </div>
         }
-        <div class="float-end mt-4">
-            <a asp-action="Utilizadores" asp-route-turmaId="@TurmaRel.TurmaId" class="btn btn-primary ">
-                Utilizadores na Turma
+        <div class="float-end mt-0 mb-0 m-4">
+            <a asp-action="Utilizadores" asp-route-turmaId="@TurmaRel.TurmaId" class="@conf.BTNin ">
+                Utilizadores
             </a>
         </div>
+
     </div>
-</div>
+</header>
 
 <partial name="_MensagemPartial"></partial>
 
 <div class="container">
-    <div class="row">
+    <div class="row d-flex justify-content-center align-items-stretch mt-3">
 
         @if (Model.Count() > 0)
         {
-            @foreach (var rel in DCP)
+            @if (User.IsInRole("Professor"))
             {
-                @foreach (var disciplina in Model)
+                @foreach (var rel in DCP)
                 {
-                    @if (disciplina.DisciplinaId == rel.DisciplinaId)
+                    @foreach (var disciplina in Model)
                     {
-                        @if (rel.ProfessorId == usuarioLog.Id || User.IsInRole("administrador"))
+                        @if (disciplina.DisciplinaId == rel.DisciplinaId)
                         {
+                            @if (rel.ProfessorId == usuarioLog.Id)
+                            {
+                                <div class="@bkg cartao" Style="@conf.CardStyle">
+                                    <div class="pt-3 @conf.CardCab" Style="@conf.CardStyleCab">
+                                        <div class="float-start"></div>
+                                        <div class="float-end ">
 
-                            <div class="@bkg">
-                                <div class="card-header pt-3">
-                                    <div class="float-start"></div>
-                                    <div class="float-end ">
-                                        @if (User.IsInRole("Professor"))
-                                        {
                                             @if (disciplina.CriadorId == usuarioLog.Id)
                                             {
                                                 <a asp-action="AddProff" asp-route-id="@disciplina.DisciplinaId" class="@btnOp link-success"
@@ -73,7 +74,7 @@
                                             }
 
                                             <a asp-action="Criar" asp-route-idTrel="@TurmaRel.TurmaId" asp-route-id="@disciplina.DisciplinaId"
-                        class="@btnOp link-dark" title="Editar Disciplina">
+                        class="@btnOp" title="Editar Disciplina">
                                                 <i class="bi bi-pencil"></i>
                                             </a>
 
@@ -84,34 +85,59 @@
                                                     <i class="bi bi-trash" style="margin-right: 0;"></i>
                                                 </a>
                                             }
-                                        }
+
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="card-body">
-                                    @if (!(User.IsInRole("administrador")))
-                                    {
+                                    <div class="card-body">
+
                                         <a asp-controller="Disciplina" asp-route-id="@disciplina.DisciplinaId" asp-action="Index"
                     class="text-decoration-none nomeDT" title="Nome da Disciplina">
-                                            <h4 class="card-title text-light">@disciplina.Nome</h4>
+                                            <h4 class="card-title @conf.Texto">@disciplina.Nome</h4>
                                         </a>
-                                    }
-                                    else
-                                    {
-                                        <h4 class="card-title text-light">@disciplina.Nome</h4>
-                                    }
-                                    <p class="card-text" title="Descrição da Disciplina">@disciplina.Descricao</p>
+
+                                        <p class="card-text @conf.Texto" title="Descrição da Disciplina" style="font-size:70%">@disciplina.Descricao</p>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
-                        @if (User.IsInRole("administrador"))
-                            break;
                     }
-                    @if (User.IsInRole("administrador"))
-                        break;
                 }
-                @if (User.IsInRole("administrador"))
-                    break;
+            }
+            else if (User.IsInRole("Aluno"))
+            {
+                @foreach (var rel in ADCP)
+                {
+                    @foreach (var disciplina in Model)
+                    {
+                        @if (disciplina.DisciplinaId == rel.DisciplinaId)
+                        {
+                            @if (rel.AlunoId == usuarioLog.Id)
+                            {
+                                <div class="@bkg cartao" Style="@conf.CardStyle">
+                                    <div class="pt-3 @conf.CardCab" Style="@conf.CardStyleCab">
+                                        <div class="float-start"></div>
+                                        <div class="float-end ">
+
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <a asp-controller="Disciplina" asp-route-id="@disciplina.DisciplinaId" asp-action="Index"
+                    class="text-decoration-none nomeDT" title="Nome da Disciplina">
+                                            <h4 class="card-title @conf.Texto">@disciplina.Nome</h4>
+                                        </a>
+                                        <p class="card-text" title="Descrição da Disciplina" style="font-size:70%">@disciplina.Descricao</p>
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                }
             }
         }
     </div>
 </div>
+<style>
+    .cartao:hover {
+        transform: scale(1.02);
+    }
+</style>

@@ -25,7 +25,7 @@ namespace ClassHome.Controllers
             this._userManager = userManager;
             this._context = context;
         }
-        
+
         [Authorize]
         public IActionResult Index(int id)
         {
@@ -300,12 +300,12 @@ namespace ClassHome.Controllers
         }
 
         [Authorize]
-        public IActionResult Utilizadores(int disciplinaId)
+        public IActionResult Utilizadores(int disciplinaId, string bg)
         {
             var disc = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == disciplinaId);
             var ProffInDisc = _context.ProfessorDisciplina.OrderBy(x => x.ProfessorId).Where(x => x.DisciplinaId == disciplinaId).AsNoTracking().ToList();
             var professores = new List<UserModel>();
-            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x=>x.TUsers == "Aluno").AsNoTracking().ToList();
+            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
             var AlunosInDisc = new List<UserModel>();
             var MatriculasDisc = _context.Matriculas.Where(x => x.DisciplinaId == disciplinaId).AsNoTracking().ToList();
 
@@ -326,9 +326,72 @@ namespace ClassHome.Controllers
                 professores.Add(us);
             }
 
+            ViewBag.BG = bg;
             ViewBag.Disciplina = disc;
             ViewBag.Professores = professores;
             return View(AlunosInDisc);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult RemProff(int idProff, int idDis)
+        {
+            var disc = _context.Disciplinas.FirstOrDefault(d => d.DisciplinaId == idDis);
+            var proff = _context.Useres.FirstOrDefault(x => x.Id == idProff);
+
+            ViewBag.Proff = proff;
+
+            return View(disc);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemProffPost(int idProff, int idDis)
+        {
+            var pf = _context.Useres.FirstOrDefault(x => x.Id == idProff);
+            var disc = _context.Disciplinas.FirstOrDefault(d => d.DisciplinaId == idDis);
+            var dp = _context.ProfessorDisciplina.Where(x => x.ProfessorId == idProff).FirstOrDefault(x => x.DisciplinaId == idDis);
+
+            if (dp != null)
+            {
+                _context.ProfessorDisciplina.Remove(dp);
+                _context.SaveChanges();
+
+                this.MostrarMensagem("" + pf.NomeCompleto + " removido da disciplina.");
+            }
+
+            return RedirectToAction("Index", new RouteValueDictionary(new { Id = disc.TurmaId }));
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult RemAluno(int idAluno, int idDis)
+        {
+            var disc = _context.Disciplinas.FirstOrDefault(d => d.DisciplinaId == idDis);
+            var aluno = _context.Useres.FirstOrDefault(x => x.Id == idAluno);
+
+            ViewBag.Aluno = aluno;
+
+            return View(disc);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemAlunoPost(int idAluno, int idDis)
+        {
+            var disc = _context.Disciplinas.FirstOrDefault(d => d.DisciplinaId == idDis);
+            var mt = _context.Matriculas.Where(x => x.AlunoId == idAluno).FirstOrDefault(x => x.DisciplinaId == idDis);
+            var us = _context.Useres.FirstOrDefault(x => x.Id == idAluno);
+
+            if (mt != null)
+            {
+                _context.Matriculas.Remove(mt);
+                _context.SaveChanges();
+
+                this.MostrarMensagem("" + us.NomeCompleto + " removido da disciplina.");
+            }
+
+            return RedirectToAction("Index", new RouteValueDictionary(new { Id = disc.TurmaId }));
         }
     }
 }

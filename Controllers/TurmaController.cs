@@ -27,7 +27,9 @@ namespace ClassHome.Controllers
         {
             var idTurma = _context.Turmas.FirstOrDefault(x => x.TurmaId == id);
             var ProffInDisciplina = _context.ProfessorDisciplina.OrderBy(x => x.ProfessorId).AsNoTracking();
+            var alunoInTurma = _context.Matriculas.OrderBy(x => x.AlunoId).AsNoTracking();
 
+            ViewBag.AlunoInTurma = alunoInTurma;
             ViewBag.ProffInDisciplina = ProffInDisciplina;
             ViewBag.TurmaId = idTurma;
             return View(await _context.Disciplinas.OrderBy(x => x.Nome).Include(x => x.Turma).Where(x => x.TurmaId == id).AsNoTracking().ToListAsync());
@@ -94,30 +96,30 @@ namespace ClassHome.Controllers
                             if (disciplina.TurmaId == dis.TurmaId)
                             {
                                 this.MostrarMensagem("Esta disciplina já existe.", true);
-
+                                return RedirectToAction("Index", new RouteValueDictionary(new { action = "Index", Id = disciplina.TurmaId }));
                             }
                         }
                     }
+
+
+                    _context.Disciplinas.Add(disciplina);
+                    if (await _context.SaveChangesAsync() > 0)
+                    {
+                        var dp = new ProfessorDisciplinaModel();
+                        dp.DisciplinaId = disciplina.DisciplinaId;
+                        dp.ProfessorId = disciplina.CriadorId;
+
+                        _context.ProfessorDisciplina.Add(dp);
+                        _context.SaveChanges();
+
+                        ViewBag.DisciplinaId = disciplina.TurmaId;
+                        this.MostrarMensagem("Nova disciplina criada.");
+                    }
                     else
                     {
-                        _context.Disciplinas.Add(disciplina);
-                        if (await _context.SaveChangesAsync() > 0)
-                        {
-                            var dp = new ProfessorDisciplinaModel();
-                            dp.DisciplinaId = disciplina.DisciplinaId;
-                            dp.ProfessorId = disciplina.CriadorId;
-
-                            _context.ProfessorDisciplina.Add(dp);
-                            _context.SaveChanges();
-
-                            ViewBag.DisciplinaId = disciplina.TurmaId;
-                            this.MostrarMensagem("Nova disciplina criada.");
-                        }
-                        else
-                        {
-                            this.MostrarMensagem("Erro ao criar disciplina.", true);
-                        }
+                        this.MostrarMensagem("Erro ao criar disciplina.", true);
                     }
+
                 }
                 return RedirectToAction("Index", new RouteValueDictionary(new { action = "Index", Id = disciplina.TurmaId }));
             }
@@ -277,17 +279,26 @@ namespace ClassHome.Controllers
             var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
             var AlunosInTurma = new List<UserModel>();
             var MatriculasTurma = _context.Matriculas.Where(x => x.TurmaId == turmaId).AsNoTracking().ToList();
+            var uId = 0;
 
             foreach (var matricula in MatriculasTurma)
             {
                 foreach (var aluno in Alunos)
                 {
-                    if (matricula.AlunoId == aluno.Id)
                     {
-                        AlunosInTurma.Add(aluno);
+                        if (matricula.AlunoId == aluno.Id)
+                        {
+                            if (aluno.Id != uId)
+                            {
+                                AlunosInTurma.Add(aluno);
+                            }
+                            uId = aluno.Id;
+                        }
                     }
                 }
             }
+
+
 
             foreach (var turma in ProffInTurma)
             {
@@ -306,9 +317,9 @@ namespace ClassHome.Controllers
         {
             var tur = _context.Turmas.FirstOrDefault(x => x.TurmaId == turmaId);
             var disciplinas = _context.Disciplinas.OrderBy(x => x.Nome).Where(x => x.TurmaId == turmaId).AsNoTracking().ToList();
-            var Alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
+            var alunos = _context.Useres.OrderBy(x => x.NomeCompleto).Where(x => x.TUsers == "Aluno").AsNoTracking().ToList();
 
-            var AlunoSelectList = new SelectList(Alunos,
+            var AlunoSelectList = new SelectList(alunos,
                 nameof(UserModel.Id), nameof(UserModel.NomeCompleto));
             var DisciplinaSelectList = new SelectList(disciplinas,
                 nameof(DisciplinaModel.DisciplinaId), nameof(DisciplinaModel.Nome));
@@ -324,12 +335,12 @@ namespace ClassHome.Controllers
         [HttpPost]
         public IActionResult AddAlunoPost([FromForm] MatriculaModel matricula)
         {
-            if(matricula.AlunoId == 0 || matricula.DisciplinaId == 0)
+            if (matricula.AlunoId == 0 || matricula.DisciplinaId == 0)
             {
-                if(matricula.AlunoId == 0)
+                if (matricula.AlunoId == 0)
                     this.MostrarMensagem("Não selecionou nenhum aluno.", true);
 
-                if(matricula.DisciplinaId == 0)
+                if (matricula.DisciplinaId == 0)
                     this.MostrarMensagem("Não selecionou nenhuma disciplina.", true);
 
                 return RedirectToAction("AddAluno", new RouteValueDictionary(new { matricula.TurmaId }));
@@ -337,7 +348,22 @@ namespace ClassHome.Controllers
             }
             else
             {
+                var matric = _context.Matriculas.Where(m => m.DisciplinaId == matricula.DisciplinaId).ToList();
+
+                foreach (var m in matric)
+                {
+                    if (matricula.DisciplinaId == m.DisciplinaId && m.AlunoId == matricula.AlunoId)
+                    {
+                        var al = _context.Useres.FirstOrDefault(x => x.Id == m.AlunoId);
+                        var dc = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == m.DisciplinaId);
+
+                        this.MostrarMensagem("" + al.NomeCompleto + " já está associado à " + dc.Nome + ".", true);
+                        return RedirectToAction("AddAluno", new RouteValueDictionary(new { matricula.TurmaId }));
+                    }
+
+                }
                 var disciplina = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == matricula.DisciplinaId);
+                var tur = _context.Turmas.FirstOrDefault(x => x.TurmaId == disciplina.TurmaId);
 
                 var mt = new MatriculaModel();
                 mt.DisciplinaId = matricula.DisciplinaId;
@@ -347,7 +373,10 @@ namespace ClassHome.Controllers
                 _context.Matriculas.Add(mt);
                 _context.SaveChanges();
 
-                return RedirectToAction("Utilizadores", new RouteValueDictionary(new { matricula.TurmaId }));
+                this.MostrarMensagem("Aluno adicionado à turma " + tur.NomeCurso + " e a disciplina de " + disciplina.Nome + ".");
+
+                return RedirectToAction("Index", new RouteValueDictionary(new { action = "Index", Id = disciplina.TurmaId }));
+
             }
         }
     }

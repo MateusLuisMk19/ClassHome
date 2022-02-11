@@ -1,5 +1,8 @@
 @model CadastrarUserViewModel
+@inject ClassHomedbContext _context
 @{
+    var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+
     bool editando = Context.Request.RouteValues.ContainsKey("id");
     if (editando)
         ViewBag.Subtitulo = "Editação de User";
@@ -7,17 +10,15 @@
         ViewBag.Subtitulo = "Inscrição de User";
 }
 
-<h1 class="text-primary">@ViewBag.Subtitulo</h1>
-<hr>
-
 <div asp-validation-summary="ModelOnly" class="val-summary text-danger mb-3"></div>
 
-<div class="container col-5 p-5 shadow" style="border-radius: 7%;">
+<div class="container col-5 p-5 mt-3 shadow" style="border-radius: 7%;">
+    <h4 class="mt-1 @conf.TitleText">@ViewBag.Subtitulo</h4>
     <form asp-action="Cadastrar" class="row">
         <input type="hidden" asp-for="@Model.Id">
         @if (!editando)
         {
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="@Model.TUsers">Tipo de utilizador</label><br>
                 <select asp-for="@Model.TUsers" class="form-control"
                 asp-items="@ViewBag.TipoUser">
@@ -26,7 +27,7 @@
                 <span asp-validation-for="@Model.TUsers" class="text-danger"></span>
             </div>
         }
-        <div class="form-group">
+        <div class="form-group mt-2">
             <label asp-for="@Model.NomeCompleto"></label><br>
             <input asp-for="@Model.NomeCompleto" class="form-control" autofocus autocomplete="off">
             <span asp-validation-for="@Model.NomeCompleto" class="text-danger"></span>
@@ -38,7 +39,7 @@
             <span asp-validation-for="@Model.DataNascimento" class="text-danger"></span>
         </div>
         <div class="w-100"></div>
-        <div class="form-group row">
+        <div class="form-group row mt-2">
             <div class="col"><label asp-for="@Model.Telefone"></label></div>
             <input asp-for="@Model.Telefone" class="form-control col justify-content-lg-end" autocomplete="off">
             <span asp-validation-for="@Model.Telefone" class="text-danger"></span>
@@ -53,7 +54,7 @@
         @if (!editando)
         {
             <div class="w-100"></div>
-            <div class="form-group">
+            <div class="form-group mt-2">
                 <label asp-for="@Model.Senha"></label><br>
                 <input asp-for="@Model.Senha" autocomplete="off" class="form-control">
                 <span asp-validation-for="@Model.Senha" class="text-danger"></span>
@@ -66,8 +67,8 @@
             </div>
         }
         <div class="mt-3 text-center">
-            <a asp-action="Index" class="btn btn-outline-secondary">Cancelar</a>
-            <button class="btn btn-primary" type="submit">Salvar</button>
+            <a asp-action="Index" class="@conf.BTNoff">Cancelar</a>
+            <button class="@conf.BTNin" type="submit">Salvar</button>
         </div>
     </form>
 </div>
