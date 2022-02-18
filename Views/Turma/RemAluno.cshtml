@@ -3,17 +3,16 @@
 
     ViewBag.Subtitulo = "Remover de " + Model.NomeCurso;
 
-    UserModel Proff = ViewBag.Proff;
+    UserModel aluno = ViewBag.Aluno;
 
 }
 
 <h1 class="text-light">@ViewBag.Subtitulo</h1>
 <hr>
 
-<h4>Deseja realmente remover <b class="text-danger">@Proff.NomeCompleto</b> da turma?</h4>
+<h4>Deseja realmente remover <b class="text-danger">@aluno.NomeCompleto</b> da turma?<br>Isso irá remove-lo de todas as disciplinas também.</h4>
 
-
-<form asp-action="RemProffPost" asp-route-idProff="@Proff.Id" asp-route-idTur="@Model.TurmaId" class="w-25">
+<form asp-action="RemAlunoPost" asp-route-idAluno="@aluno.Id" asp-route-idTur="@Model.TurmaId" class="w-25">
     <input type="hidden" asp-for="@Model.TurmaId">
     <div class="mt-3">
         <a asp-action="Index" asp-route-id="@Model.TurmaId" class="btn btn-success">Não</a>

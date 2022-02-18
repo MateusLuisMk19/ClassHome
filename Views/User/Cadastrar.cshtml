@@ -2,12 +2,17 @@
 @inject ClassHomedbContext _context
 @{
     var conf = _context.Configs.FirstOrDefault(x => x.Estado == Estado.Ativado);
+    var visu = "";
 
     bool editando = Context.Request.RouteValues.ContainsKey("id");
-    if (editando)
+    if (editando){
         ViewBag.Subtitulo = "Editação de User";
-    else
+        visu = "visually-hidden";
+    }
+    else{
         ViewBag.Subtitulo = "Inscrição de User";
+        visu = " ";
+    }
 }
 
 <div asp-validation-summary="ModelOnly" class="val-summary text-danger mb-3"></div>
@@ -16,17 +21,16 @@
     <h4 class="mt-1 @conf.TitleText">@ViewBag.Subtitulo</h4>
     <form asp-action="Cadastrar" class="row">
         <input type="hidden" asp-for="@Model.Id">
-        @if (!editando)
-        {
-            <div class="form-group mt-2">
-                <label asp-for="@Model.TUsers">Tipo de utilizador</label><br>
-                <select asp-for="@Model.TUsers" class="form-control"
-                asp-items="@ViewBag.TipoUser">
-                    <option disabled selected>Escolha o tipo de utilizador</option>
-                </select>
-                <span asp-validation-for="@Model.TUsers" class="text-danger"></span>
-            </div>
-        }
+        
+        <div class="form-group mt-2 @visu">
+            <label asp-for="@Model.TUsers">Tipo de utilizador</label><br>
+            <select asp-for="@Model.TUsers" class="form-control"
+            asp-items="@ViewBag.TipoUser">
+                <option disabled selected>Escolha o tipo de utilizador</option>
+            </select>
+            <span asp-validation-for="@Model.TUsers" class="text-danger"></span>
+        </div>
+        
         <div class="form-group mt-2">
             <label asp-for="@Model.NomeCompleto"></label><br>
             <input asp-for="@Model.NomeCompleto" class="form-control" autofocus autocomplete="off">

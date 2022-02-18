@@ -55,7 +55,8 @@ namespace ClassHome.Controllers
                     NomeCompleto = userBD.NomeCompleto,
                     Email = userBD.Email,
                     Telefone = userBD.PhoneNumber,
-                    DataNascimento = userBD.DataNascimento
+                    DataNascimento = userBD.DataNascimento,
+                    TUsers = userBD.TUsers
                 };
                 return View(userVM);
             }

@@ -53,7 +53,7 @@
                                 <td>
                                     @if (user.Id != usuarioLog.Id)
                                     {
-                                        <a asp-action="Excluir" asp-route-id="@user.Id" class="btn btn-sm btn-danger">
+                                        <a asp-action="RemProff" asp-route-idProff="@user.Id" asp-route-idTurm="@turma.TurmaId" class="btn btn-sm btn-danger">
                                             <i class="bi-x-circle" title="Removar da Turma"></i></a>
                                     }
                                 </td>
@@ -94,7 +94,7 @@
                             @if (User.IsInRole("Professor") && turma.CriadorId == usuarioLog.Id)
                             {
                                 <td>
-                                    <a asp-action="Excluir" asp-route-id="@USE.Id" class="btn btn-sm btn-danger">
+                                    <a asp-action="RemAluno" asp-route-idAluno="@USE.Id" asp-route-idTurm="@turma.TurmaId" class="btn btn-sm btn-danger">
                                         <i class="bi-x-circle" title="Removar da Turma"></i></a>
                                 </td>
                             }

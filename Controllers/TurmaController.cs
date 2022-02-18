@@ -32,7 +32,8 @@ namespace ClassHome.Controllers
             ViewBag.AlunoInTurma = alunoInTurma;
             ViewBag.ProffInDisciplina = ProffInDisciplina;
             ViewBag.TurmaId = idTurma;
-            return View(await _context.Disciplinas.OrderBy(x => x.Nome).Include(x => x.Turma).Where(x => x.TurmaId == id).AsNoTracking().ToListAsync());
+            return View(await _context.Disciplinas.OrderBy(x => x.Nome).Include(x => x.Turma)
+            .Where(x => x.TurmaId == id).AsNoTracking().ToListAsync());
 
         }
 
@@ -378,6 +379,71 @@ namespace ClassHome.Controllers
                 return RedirectToAction("Index", new RouteValueDictionary(new { action = "Index", Id = disciplina.TurmaId }));
 
             }
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult RemProff(int idProff, int idTurm)
+        {
+            var turm = _context.Turmas.FirstOrDefault(d => d.TurmaId == idTurm);
+            var proff = _context.Useres.FirstOrDefault(x => x.Id == idProff);
+
+            ViewBag.Proff = proff;
+
+            return View(turm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemProffPost(int idProff, int idTur)
+        {
+            var pf = _context.Useres.FirstOrDefault(x => x.Id == idProff);
+            var turm = _context.Turmas.FirstOrDefault(d => d.TurmaId == idTur);
+            var dp = _context.TurmaUser.Where(x => x.UserId == idProff).FirstOrDefault(x => x.TurmaId == idTur);
+
+            if (dp != null)
+            {
+                _context.TurmaUser.Remove(dp);
+                _context.SaveChanges();
+
+                this.MostrarMensagem("" + pf.NomeCompleto + " removido da Turma.");
+            }
+
+            return RedirectToAction("Index", new RouteValueDictionary(new { Id = turm.TurmaId }));
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult RemAluno(int idAluno, int idTurm)
+        {
+            var turm = _context.Turmas.FirstOrDefault(d => d.TurmaId == idTurm);
+            var aluno = _context.Useres.FirstOrDefault(x => x.Id == idAluno);
+
+            ViewBag.Aluno = aluno;
+
+            return View(turm);
+        }
+
+        [Authorize]
+        [HttpPost]
+        public IActionResult RemAlunoPost(int idAluno, int idTur)
+        {
+            var tur = _context.Turmas.FirstOrDefault(d => d.TurmaId == idTur);
+            var mt = _context.Matriculas.Where(x => x.AlunoId == idAluno).ToList().Where(x => x.TurmaId == idTur);
+            var us = _context.Useres.FirstOrDefault(x => x.Id == idAluno);
+
+            if (mt != null)
+            {
+                foreach (var matric in mt)
+                {
+                    _context.Matriculas.Remove(matric);
+                }
+                _context.SaveChanges();
+
+                this.MostrarMensagem("" + us.NomeCompleto + " removido da Turma.");
+            }
+
+            return RedirectToAction("Index", new RouteValueDictionary(new { Id = tur.TurmaId }));
         }
     }
 }

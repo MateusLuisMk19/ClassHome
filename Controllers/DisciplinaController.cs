@@ -30,15 +30,13 @@ namespace ClassHome.Controllers
         public IActionResult Index(int id)
         {
             var idDis = _context.Disciplinas.FirstOrDefault(x => x.DisciplinaId == id);
-            var publicacoes = _context.Publicacoes.Where(p => p.DisciplinaId == id).OrderByDescending(x => x.DataPublicacao).AsNoTracking();
-
+            var publicacoes = _context.Publicacoes.Where(p => p.DisciplinaId == id)
+            .OrderByDescending(x => x.DataPublicacao).AsNoTracking();
 
             ViewBag.Publicacoes = publicacoes;
             ViewBag.DisciplinaId = idDis;
 
-
             return View(new DInnerViewModel());
-
         }
 
         [Authorize]
